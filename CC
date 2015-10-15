@@ -1,11 +1,27 @@
 #ident	"@(#)cfront:CC	1.7"
 #!/bin/sh
+
+# -----------------------------------------
+
+	CF=~/projects/cfront-1b
+	
+	cfrontC=$CF/cfront
+	LIBRARY=$CF/libC.a
+	I=$CF/incl
+	Y="-Du3b"
+	
+	ccC="gcc -w"
+	cppC="cpp"
+	munch=$CF/munch
+
+# -----------------------------------------
+
 LIB_ID=${LIB_ID-C}
 LIBRARY=${LIBRARY--l${LIB_ID}}
 NMFLAGS=${NMFLAGS-}
 C= EE=0 FON=
 O=
-PON= R= SUF= X= Y= DASHR= PLUSI=
+PON= R= SUF= X= Y=${Y-} DASHR= PLUSI=
 Z=
 E=0
 CF=
@@ -170,7 +186,7 @@ case $G in
 				cat __err
 			elif test  "$DASHR" != 1		# find ctors/dtors
 			then
-				nm $NMFLAGS $OO | munch $P >__ctdt.c
+				nm $NMFLAGS $OO | $munch $P >__ctdt.c
 				case $? in
 				1)	$ccC -c __ctdt.c >/dev/null
 					#echo "ld $Z __ctdt.o $LIBRARY -lc"

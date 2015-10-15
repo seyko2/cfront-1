@@ -30,5 +30,5 @@ extern char *malloc(unsigned);
 extern void free(char*);
 extern char *realloc(char*, unsigned);
 extern int mallopt(int, int);
-extern mallinfo mallinfo(int);
+// extern mallinfo mallinfo(int);
 extern char *calloc (unsigned, unsigned);

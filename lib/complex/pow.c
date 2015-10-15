@@ -8,7 +8,7 @@ pow(double base, complex z)
 	real to complex power: base**z.
 */
 {
-	register complex y;
+       /*register*/ complex y;
 	
 	if (base == 0) return y;	/* even for singularity */
 
@@ -29,7 +29,7 @@ pow(complex a, int n)
 	complex to integer power: a**n.
 */
 {
-	register complex x, p = 1;
+       /*register*/ complex x, p = 1;
 
 	if (n == 0) return p;
 

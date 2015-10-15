@@ -1,7 +1,7 @@
 /* @(#) math.h 1.4 1/27/86 17:46:49 */
 /*ident	"@(#)cfront:incl/math.h	1.4"*/
 #ifndef _POLY9
-extern int errno, signgam;
+//extern int errno, signgam;
 
 extern int abs (int);
 extern double atof(const char*), frexp(double, int*);

@@ -9,7 +9,7 @@
 #define	_B	0100	/* Blank */
 #define	_X	0200	/* heXadecimal digit */
 
-#ifndef lint
+#if 0// ndef lint
 extern char	_ctype[];
 
 #define	isalpha(c)	((_ctype + 1)[c] & (_U | _L))
@@ -31,3 +31,15 @@ extern char	_ctype[];
 
 extern int toupper (int);
 extern int tolower (int);
+
+int isalnum(int);
+int isalpha(int);
+int iscntrl(int);
+int isdigit(int);
+int isgraph(int);
+int islower(int);
+int isprint(int);
+int ispunct(int);
+int isspace(int);
+int isupper(int);
+int isxdigit(int);

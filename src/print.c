@@ -1449,7 +1449,7 @@ else
 			case PTR:
 			case RPTR:
 			case VEC:
-				if (Pptr(t1)->typ != Pptr(e2->tp)->typ) {
+                               if (!e2->tp || Pptr(t1)->typ != Pptr(e2->tp)->typ) {
 					puttok(LP);
 					bit oc = Cast;
 					Cast = 1;

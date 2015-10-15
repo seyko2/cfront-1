@@ -6,9 +6,9 @@
 
 #ifndef va_start
 typedef char *va_list;  //for the declaration of vprintf, vfprintf, vsprintf.
+#define va_start /
 #endif
-
-# ifndef FILE
+#if 0 //ndef FILE
 extern	struct	_iobuf {
 	int	_cnt;
 	char	*_ptr;
@@ -35,7 +35,7 @@ extern	struct	_iobuf {
 
 extern int _flsbuf(unsigned,FILE*);
 extern int _filbuf(FILE*);
-
+#if 0
 #define	stdin (&_iob[0])
 #define	stdout (&_iob[1])
 #define	stderr (&_iob[2])
@@ -46,7 +46,7 @@ extern int _filbuf(FILE*);
 #define	feof(p) (((p)->_flag&_IOEOF)!=0)
 #define	ferror(p) (((p)->_flag&_IOERR)!=0)
 #define	fileno(p) ((p)->_file)
-
+#endif
 extern FILE* fopen(const char*, const char*);
 extern FILE* fdopen(int, const char*);
 extern FILE* freopen(const char*, const char*, FILE*);
@@ -105,7 +105,28 @@ extern int      vprintf(char*, va_list),
 
 extern void perror (const char*);
 
-extern int errno;
+// extern int errno;
 extern char* sys_errlist[];
 extern int sys_nerr;
 extern unsigned char *_bufendtab[];
+
+int feof(FILE *p);
+int ferror(FILE *p);
+int fileno(FILE *p);
+char* strerror(int);
+
+extern FILE* _get_stdin();
+extern FILE* _get_stdout();
+extern FILE* _get_stderr();
+
+#ifndef stdin
+#define stdin  _get_stdin()
+#define stdout _get_stdout()
+#define stderr _get_stderr()
+#define getc(fp) fgetc(fp)
+#define getchar() getc(stdin)
+#define putc(c,fp) fputc(c,fp)
+#define putchar(c) putc(c,stdout)
+#endif
+
+void _main();

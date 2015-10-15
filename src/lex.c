@@ -90,8 +90,8 @@ int curr_file;				// current index in file_stack
 					// that is current #include nest level
 
 class loc curloc;
-FILE * out_file = stdout;
-FILE * in_file = stdin;
+FILE * out_file;// = stdout;
+FILE * in_file;// = stdin;
 Ptable ktbl;
 int br_level = 0;		/* number of unmatched ``(''s */
 int bl_level = 0;		/* number of unmatched ``{''s */
@@ -203,7 +203,7 @@ void loc.put(FILE* p)
 	if (0<=file && file<MAXFILE) {
 		char* f = file_name[file];
 		if (f==0) f = (src_file_name) ? src_file_name : "";
-		fprintf(p,"\"%s\", line %d: ",f,line);
+               fprintf(p,"%s:%d: ",f,line);
 	}
 }	
 
@@ -947,7 +947,7 @@ int lxtitle()
 			switch (get(c)) {
 			case '"':
 				pch('\0');
-				if (get(c) != '\n') error("unX eol on # line");
+                                while (get(c) != '\n' && c != EOF); // if (get(c) != '\n') error("unX eol on # line");
 				if (*txtstart) {	// stack file name
 					if (curr_file == 0) goto push;
 
@@ -1001,7 +1001,7 @@ int lxtitle()
 			break;
 		default:	/* pass #rubbish through */
 			pch('#');
-			pch('i');
+                       pch(c);
 			while (get(c) != '\n') pch(c);
 			pch('\0');
 			fprintf(out_file,"\n%s\n",txtstart);

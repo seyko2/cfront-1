@@ -58,7 +58,7 @@ public:
 ostream& operator<<(ostream&, complex);
 istream& operator>>(istream&, complex&);
 
-extern int errno;
+//extern int errno;
 
 inline double real(complex& a)
 {

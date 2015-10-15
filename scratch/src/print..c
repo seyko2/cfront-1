@@ -10,18 +10,6 @@ int _vec_delete ( ) ;
 #line 1 "../../src/print.c"
 typedef char * va_list ; 
 
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
-
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
 
@@ -160,9 +148,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -171,6 +156,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 
@@ -1332,11 +1341,7 @@ forced_sm = 1 ;
 ntok = 0 ; 
 
 #line 54 "../../src/print.c"
-( ( -- out_file -> __iobuf__cnt ) >= 0 ) ? ( ( ( int ) 
-#line 54 "../../src/print.c"
-( ( * ( out_file -> __iobuf__ptr ++ ) ) = 10) ) ) : _flsbuf ( 
-#line 54 "../../src/print.c"
-10, ( struct _iobuf * ) out_file ) ; 
+fputc ( ( int ) '\n' , ( struct _iobuf * ) out_file ) ; 
 
 #line 55 "../../src/print.c"
 last_line . _loc_line ++ ; 
@@ -4407,11 +4412,13 @@ _basetype_b_name -> _expr__O2.__C2_tp ;
 goto cmp ; 
 
 #line 1449 "../../src/print.c"
-case 125 : case 158 : case 110 : if ( ( ( ( struct ptr * ) 
+case 125 : case 158 : case 110 : if ( ( ! _auto_this -> _expr__O4.__C4_e2 -> _expr__O2.__C2_tp ) || 
 #line 1449 "../../src/print.c"
-( _auto_t1 ) ) ) -> _ptr_typ != ( ( ( struct ptr * ) ( _auto_this -> 
+( ( ( ( struct ptr * ) ( _auto_t1 ) ) ) -> _ptr_typ != ( 
 #line 1449 "../../src/print.c"
-_expr__O4.__C4_e2 -> _expr__O2.__C2_tp ) ) ) -> _ptr_typ ) 
+( ( struct ptr * ) ( _auto_this -> _expr__O4.__C4_e2 -> _expr__O2.__C2_tp ) ) ) -> _ptr_typ ) ) 
+#line 1449 "../../src/print.c"
+
 #line 1452 "../../src/print.c"
 { 
 #line 1452 "../../src/print.c"
@@ -5282,21 +5289,13 @@ if ( ( _auto_fi == 0 ) && _auto_this -> _stmt__O9.__C9_for_init ) _expr_print ( 
 _auto_this -> _stmt__O9.__C9_for_init -> _stmt__O8.__C8_e ) ; 
 
 #line 1841 "../../src/print.c"
-( ( -- out_file -> __iobuf__cnt ) >= 0 ) ? ( ( ( int ) 
-#line 1841 "../../src/print.c"
-( ( * ( out_file -> __iobuf__ptr ++ ) ) = 59) ) ) : _flsbuf ( 
-#line 1841 "../../src/print.c"
-59, ( struct _iobuf * ) out_file ) ; 
+fputc ( ( int ) ';' , ( struct _iobuf * ) out_file ) ; 
 
 #line 1842 "../../src/print.c"
 if ( _auto_this -> _stmt__O8.__C8_e ) Eprint ( ( struct expr * ) _auto_this -> _stmt__O8.__C8_e ) ; 
 
 #line 1843 "../../src/print.c"
-( ( -- out_file -> __iobuf__cnt ) >= 0 ) ? ( ( ( int ) 
-#line 1843 "../../src/print.c"
-( ( * ( out_file -> __iobuf__ptr ++ ) ) = 59) ) ) : _flsbuf ( 
-#line 1843 "../../src/print.c"
-59, ( struct _iobuf * ) out_file ) ; 
+fputc ( ( int ) ';' , ( struct _iobuf * ) out_file ) ; 
 
 #line 1844 "../../src/print.c"
 if ( _auto_this -> _stmt__O7.__C7_e2 ) Eprint ( ( struct expr * ) _auto_this -> _stmt__O7.__C7_e2 ) ; 

@@ -10,18 +10,6 @@ int _vec_delete ( ) ;
 #line 1 "../../src/expand.c"
 typedef char * va_list ; 
 
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
-
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
 
@@ -160,9 +148,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -171,6 +156,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 

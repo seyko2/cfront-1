@@ -22,3 +22,15 @@ typedef int (*GPT)(int,char*);
 #define set_handler(generic,type,x) name4(set_,type,generic,_handler)(x)
 #define errorhandler(generic,type) name3(type,generic,handler)
 #define callerror(generic,type,a,b) (*errorhandler(generic,type))(a,b)
+
+#ifndef _name2_aux
+#define _name2_aux(a,b) a##b
+#define _name3_aux(a,b,c) a##b##c
+#define _name4_aux(a,b,c,d)  a##b##c##d
+#endif
+#undef name2
+#undef name3
+#undef name4
+#define name2(a,b) _name2_aux(a,b)
+#define name3(a,b,c) _name3_aux(a,b,c)
+#define name4(a,b,c,d) _name4_aux(a,b,c,d)

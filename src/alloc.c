@@ -1,7 +1,7 @@
 /* @(#) alloc.c 1.3 1/27/86 17:48:32 */ 
 /*ident	"@(#)cfront:src/alloc.c	1.3" */
 #include "cfront.h"
-
+#if 0
 extern void free(char*);
 extern char *malloc(unsigned);
 extern void print_free();
@@ -139,3 +139,14 @@ if (Nspy) {
 		q->next = p;
 	allocp = q;
 }
+#else
+void *calloc(unsigned a, unsigned b);
+void *malloc(unsigned nbytes)
+{
+    return calloc(1, nbytes);
+}
+
+void print_free() {}
+
+int NFn, NFtn, NFbt, NFpv, NFf, NFe, NFs, NFc;
+#endif

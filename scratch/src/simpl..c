@@ -10,18 +10,6 @@ int _vec_delete ( ) ;
 #line 1 "../../src/simpl.c"
 typedef char * va_list ; 
 
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
-
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
 
@@ -160,9 +148,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -171,6 +156,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 
@@ -1350,14 +1359,44 @@ extern int F_SENSITIVE ;
 #line 82 "../../src/size.h"
 extern int F_OPTIMIZED ; 
 
-#line 13 "../../incl/ctype.h"
-extern char _ctype [ ] ; 
-
 #line 32 "../../incl/ctype.h"
 extern int toupper ( ) ; 
 
 #line 33 "../../incl/ctype.h"
 extern int tolower ( ) ; 
+
+#line 35 "../../incl/ctype.h"
+int isalnum ( ) ; 
+
+#line 36 "../../incl/ctype.h"
+int isalpha ( ) ; 
+
+#line 37 "../../incl/ctype.h"
+int iscntrl ( ) ; 
+
+#line 38 "../../incl/ctype.h"
+int isdigit ( ) ; 
+
+#line 39 "../../incl/ctype.h"
+int isgraph ( ) ; 
+
+#line 40 "../../incl/ctype.h"
+int islower ( ) ; 
+
+#line 41 "../../incl/ctype.h"
+int isprint ( ) ; 
+
+#line 42 "../../incl/ctype.h"
+int ispunct ( ) ; 
+
+#line 43 "../../incl/ctype.h"
+int isspace ( ) ; 
+
+#line 44 "../../incl/ctype.h"
+int isupper ( ) ; 
+
+#line 45 "../../incl/ctype.h"
+int isxdigit ( ) ; 
 
 #line 34 "../../src/simpl.c"
 Pname new_fct ; 
@@ -3167,11 +3206,11 @@ _auto_c3 = ( _auto_s [ 3 ] ) ;
 #line 667 "../../src/simpl.c"
 if ( ( ( ( _auto_s [ 0 ] ) == '_' ) && ( ( 
 #line 667 "../../src/simpl.c"
-_auto_s [ 1 ] ) == 'D' ) ) && ( ( ( _ctype + 1 ) [ _auto_c3 ] 
+_auto_s [ 1 ] ) == 'D' ) ) && isdigit ( ( int ) _auto_c3 ) ) 
 #line 667 "../../src/simpl.c"
-) & 04 ) ) 
+continue 
 #line 667 "../../src/simpl.c"
-continue ; 
+; 
 } 
 #line 670 "../../src/simpl.c"
 if ( _auto_cln = _type_is_cl_obj ( ( struct type * ) _auto_n -> _expr__O2.__C2_tp ) ) { 

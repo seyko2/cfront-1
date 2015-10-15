@@ -10,18 +10,6 @@ int _vec_delete ( ) ;
 #line 1 "../../src/alloc.c"
 typedef char * va_list ; 
 
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
-
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
 
@@ -160,9 +148,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -171,6 +156,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 
@@ -1266,363 +1275,55 @@ extern int Nstd ;
 #line 781 "../../src/cfront.h"
 extern int stcount ; 
 
-#line 5 "../../src/alloc.c"
-extern int free ( ) ; 
+#line 143 "../../src/alloc.c"
+int * calloc ( ) ; 
 
-#line 6 "../../src/alloc.c"
-extern char * malloc ( ) ; 
+#line 144 "../../src/alloc.c"
+int * malloc ( _auto_nbytes ) unsigned int _auto_nbytes ; 
 
-#line 7 "../../src/alloc.c"
-extern int print_free ( ) ; 
-typedef struct header HEADER ; 
-
-#line 11 "../../src/alloc.c"
-static HEADER * morecore ( ) ; 
-
-#line 13 "../../src/alloc.c"
-int maxalloc = 0 ; 
-
-#line 15 "../../src/alloc.c"
-struct header { /* sizeof = 8 */
-HEADER * _header_next ; 
-unsigned int _header_size ; 
-} ; 
-
-#line 21 "../../src/alloc.c"
-static HEADER base ; 
-
-#line 22 "../../src/alloc.c"
-HEADER * allocp = 0 ; 
-
-#line 24 "../../src/alloc.c"
-extern int print_free ( ) 
-#line 25 "../../src/alloc.c"
+#line 145 "../../src/alloc.c"
 { 
-#line 25 "../../src/alloc.c"
-register HEADER * _auto_p ; 
-register HEADER * _auto_q ; 
-register int _auto_amount ; 
-register int _auto_number ; 
+#line 145 "../../src/alloc.c"
+int * _auto__result ; 
 
-#line 26 "../../src/alloc.c"
-_auto_q = 0 ; 
-
-#line 27 "../../src/alloc.c"
-_auto_amount = 0 ; 
-
-#line 28 "../../src/alloc.c"
-_auto_number = 0 ; 
-
-#line 30 "../../src/alloc.c"
-for ( _auto_p = allocp ;( _auto_q != allocp ) ;( _auto_q = ( _auto_p = _auto_p -> _header_next ) ) ) 
-#line 30 "../../src/alloc.c"
-
-#line 30 "../../src/alloc.c"
+#line 146 "../../src/alloc.c"
 { 
-#line 30 "../../src/alloc.c"
-_auto_number ++ ; 
+#line 146 "../../src/alloc.c"
+{ _auto__result = calloc ( ( unsigned int ) 1 , _auto_nbytes ) ; 
 
-#line 32 "../../src/alloc.c"
-_auto_amount += _auto_p -> _header_size ; 
-} 
-#line 34 "../../src/alloc.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , 
-#line 34 "../../src/alloc.c"
-( char * ) "print_free: %d %d\n", _auto_number , _auto_amount * 8) ; 
-} ; 
-
-#line 37 "../../src/alloc.c"
-extern char * malloc ( _auto_nbytes ) unsigned int _auto_nbytes ; 
-
-#line 38 "../../src/alloc.c"
-{ 
-#line 38 "../../src/alloc.c"
-char * _auto__result ; 
-register HEADER * _auto_p ; 
-register HEADER * _auto_q ; 
-register int _auto_nunits ; 
-
-#line 42 "../../src/alloc.c"
-Nalloc ++ ; 
-
-#line 43 "../../src/alloc.c"
-_auto_nunits = ( 1 + ( ( ( _auto_nbytes + 8) - 1 ) / 8) ) ; 
-#line 43 "../../src/alloc.c"
-
-#line 44 "../../src/alloc.c"
-if ( ( _auto_q = allocp ) == 0 ) { 
-#line 44 "../../src/alloc.c"
-base . _header_next = ( allocp = ( 
-#line 44 "../../src/alloc.c"
-_auto_q = ( & base ) ) ) ; 
-
-#line 46 "../../src/alloc.c"
-base . _header_size = 0 ; 
-} 
-#line 48 "../../src/alloc.c"
-for ( _auto_p = _auto_q -> _header_next ;;( ( _auto_q = _auto_p ) , ( _auto_p = _auto_p -> _header_next ) 
-#line 48 "../../src/alloc.c"
-) ) 
-#line 48 "../../src/alloc.c"
-{ 
-#line 48 "../../src/alloc.c"
-if ( _auto_p -> _header_size >= _auto_nunits ) { 
-#line 49 "../../src/alloc.c"
-if ( _auto_p -> _header_size == _auto_nunits ) 
-#line 49 "../../src/alloc.c"
-
-#line 51 "../../src/alloc.c"
-_auto_q -> _header_next = _auto_p -> _header_next ; 
-else 
-#line 52 "../../src/alloc.c"
-{ 
-#line 52 "../../src/alloc.c"
-_auto_p -> _header_size -= _auto_nunits ; 
-
-#line 54 "../../src/alloc.c"
-_auto_p += ( ( ( int ) ( _auto_p -> _header_size ) ) ) ; 
-
-#line 55 "../../src/alloc.c"
-_auto_p -> _header_size = _auto_nunits ; 
-} 
-#line 57 "../../src/alloc.c"
-allocp = _auto_q ; 
-
-#line 60 "../../src/alloc.c"
-if ( maxalloc < _auto_nunits ) maxalloc = _auto_nunits ; 
-
-#line 62 "../../src/alloc.c"
-{ 
-#line 62 "../../src/alloc.c"
-register int * _auto_x ; 
-register int * _auto_y ; 
-
-#line 62 "../../src/alloc.c"
-_auto_x = ( ( ( int * ) ( _auto_p + 1 ) ) ) ; 
-
-#line 63 "../../src/alloc.c"
-_auto_y = ( ( ( int * ) ( _auto_p + _auto_nunits ) ) ) ; 
-
-#line 64 "../../src/alloc.c"
-while ( _auto_x < _auto_y ) ( * ( -- _auto_y ) ) = 0 ; 
-
-#line 65 "../../src/alloc.c"
-{ 
-#line 65 "../../src/alloc.c"
-{ _auto__result = ( ( ( char * ) ( _auto_x ) ) ) ; 
-#line 65 "../../src/alloc.c"
-
-#line 65 "../../src/alloc.c"
-return _auto__result ; 
-} } } } 
-#line 67 "../../src/alloc.c"
-if ( _auto_p == allocp ) if ( ( _auto_p = morecore ( ( 
-#line 67 "../../src/alloc.c"
-unsigned int ) _auto_nunits ) ) == 0 ) 
-#line 69 "../../src/alloc.c"
-{ 
-#line 69 "../../src/alloc.c"
-{ _auto__result = 0 ; 
-
-#line 69 "../../src/alloc.c"
-return _auto__result ; 
-} } } } ; 
-
-#line 75 "../../src/alloc.c"
-static HEADER * morecore ( _auto_nu ) unsigned int _auto_nu ; 
-
-#line 76 "../../src/alloc.c"
-{ 
-#line 76 "../../src/alloc.c"
-HEADER * _auto__result ; 
-
-#line 77 "../../src/alloc.c"
-extern char * sbrk ( ) ; 
-register HEADER * _auto_up ; 
-register int _auto_rnu2 ; 
-register int _auto_rnu ; 
-register char * _auto_cp ; 
-int _auto_ma ; 
-
-#line 81 "../../src/alloc.c"
-_auto_rnu = ( 1024 * ( ( ( _auto_nu + 1024 ) - 1 ) / 1024 ) ) ; 
-#line 81 "../../src/alloc.c"
-
-#line 82 "../../src/alloc.c"
-_auto_cp = sbrk ( _auto_rnu2 = ( _auto_rnu * 8) ) ; 
-
-#line 83 "../../src/alloc.c"
-Nfree_store += _auto_rnu2 ; 
-
-#line 84 "../../src/alloc.c"
-if ( ( ( ( int ) ( _auto_cp ) ) ) == -1) errorFI_PC__E ( 
-#line 84 "../../src/alloc.c"
-( int ) 'i' , ( char * ) "free store exhausted") ; 
-
-#line 85 "../../src/alloc.c"
-_auto_up = ( ( ( struct header * ) ( _auto_cp ) ) ) ; 
-
-#line 86 "../../src/alloc.c"
-_auto_up -> _header_size = _auto_rnu ; 
-
-#line 87 "../../src/alloc.c"
-_auto_ma = maxalloc ; 
-
-#line 88 "../../src/alloc.c"
-maxalloc = _auto_rnu ; 
-
-#line 89 "../../src/alloc.c"
-free ( ( ( char * ) ( _auto_up + 1 ) ) ) ; 
-
-#line 90 "../../src/alloc.c"
-maxalloc = _auto_ma ; 
-
-#line 91 "../../src/alloc.c"
-{ 
-#line 91 "../../src/alloc.c"
-{ _auto__result = allocp ; 
-
-#line 91 "../../src/alloc.c"
+#line 146 "../../src/alloc.c"
 return _auto__result ; 
 } } } ; 
 
-#line 94 "../../src/alloc.c"
+#line 149 "../../src/alloc.c"
+int print_free ( ) 
+#line 149 "../../src/alloc.c"
+{ 
+#line 149 "../../src/alloc.c"
+} ; 
+
+#line 151 "../../src/alloc.c"
 int NFn = 0 ; 
 
-#line 94 "../../src/alloc.c"
+#line 151 "../../src/alloc.c"
 int NFtn = 0 ; 
 
-#line 94 "../../src/alloc.c"
+#line 151 "../../src/alloc.c"
 int NFbt = 0 ; 
 
-#line 94 "../../src/alloc.c"
+#line 151 "../../src/alloc.c"
 int NFpv = 0 ; 
 
-#line 94 "../../src/alloc.c"
+#line 151 "../../src/alloc.c"
 int NFf = 0 ; 
 
-#line 94 "../../src/alloc.c"
+#line 151 "../../src/alloc.c"
 int NFe = 0 ; 
 
-#line 94 "../../src/alloc.c"
+#line 151 "../../src/alloc.c"
 int NFs = 0 ; 
 
-#line 94 "../../src/alloc.c"
+#line 151 "../../src/alloc.c"
 int NFc = 0 ; 
-
-#line 96 "../../src/alloc.c"
-extern int free ( _auto_ap ) char * _auto_ap ; 
-
-#line 97 "../../src/alloc.c"
-{ 
-#line 97 "../../src/alloc.c"
-register HEADER * _auto_p ; 
-register HEADER * _auto_q ; 
-
-#line 98 "../../src/alloc.c"
-if ( _auto_ap == 0 ) { 
-#line 98 "../../src/alloc.c"
-return ; 
-} 
-#line 100 "../../src/alloc.c"
-_auto_p = ( ( ( ( struct header * ) ( _auto_ap ) ) ) - 
-#line 100 "../../src/alloc.c"
-1 ) ; 
-
-#line 102 "../../src/alloc.c"
-if ( maxalloc < _auto_p -> _header_size ) errorFI_PC__E ( ( int ) 'i' , ( char * ) 
-#line 102 "../../src/alloc.c"
-"free store corrupted (%d)", _auto_ap ) ; 
-
-#line 104 "../../src/alloc.c"
-Nfree ++ ; 
-
-#line 106 "../../src/alloc.c"
-if ( Nspy ) { 
-#line 106 "../../src/alloc.c"
-Pname _auto_pp ; 
-TOK _auto_t ; 
-char * _auto_s ; 
-
-#line 107 "../../src/alloc.c"
-_auto_pp = ( ( ( struct name * ) ( _auto_ap ) ) ) ; 
-
-#line 108 "../../src/alloc.c"
-_auto_t = _auto_pp -> _node_base ; 
-
-#line 109 "../../src/alloc.c"
-_auto_s = 0 ; 
-
-#line 111 "../../src/alloc.c"
-switch ( _auto_t ) { 
-#line 111 "../../src/alloc.c"
-case 21 : case 5 : case 97 : case 38 : case 29 : 
-#line 111 "../../src/alloc.c"
-
-#line 113 "../../src/alloc.c"
-case 22 : case 15 : case 11 : case 119 : case 121 : case 114 : NFbt ++ ; 
-#line 113 "../../src/alloc.c"
-
-#line 115 "../../src/alloc.c"
-break ; 
-
-#line 117 "../../src/alloc.c"
-case 125 : case 110 : NFpv ++ ; 
-
-#line 118 "../../src/alloc.c"
-break ; 
-
-#line 120 "../../src/alloc.c"
-case 108 : NFf ++ ; 
-
-#line 120 "../../src/alloc.c"
-break ; 
-
-#line 122 "../../src/alloc.c"
-case 82 : case 84 : case 81 : case 83 : case 34 : NFc ++ ; 
-
-#line 123 "../../src/alloc.c"
-break ; 
-} } 
-#line 126 "../../src/alloc.c"
-for ( _auto_q = allocp ;( ! ( ( _auto_p > _auto_q ) && ( _auto_p < 
-#line 126 "../../src/alloc.c"
-_auto_q -> _header_next ) ) ) ;( _auto_q = _auto_q -> _header_next ) ) 
-#line 127 "../../src/alloc.c"
-if ( ( _auto_q >= _auto_q -> 
-#line 127 "../../src/alloc.c"
-_header_next ) && ( ( _auto_p > _auto_q ) || ( _auto_p < _auto_q -> _header_next ) ) ) 
-#line 128 "../../src/alloc.c"
-break 
-#line 128 "../../src/alloc.c"
-; 
-
-#line 130 "../../src/alloc.c"
-if ( ( _auto_p + _auto_p -> _header_size ) == _auto_q -> _header_next ) { 
-#line 130 "../../src/alloc.c"
-_auto_p -> _header_size += _auto_q -> _header_next -> 
-#line 130 "../../src/alloc.c"
-_header_size ; 
-
-#line 132 "../../src/alloc.c"
-_auto_p -> _header_next = _auto_q -> _header_next -> _header_next ; 
-} else 
-#line 134 "../../src/alloc.c"
-_auto_p -> _header_next = _auto_q -> _header_next ; 
-
-#line 135 "../../src/alloc.c"
-if ( ( _auto_q + _auto_q -> _header_size ) == _auto_p ) { 
-#line 135 "../../src/alloc.c"
-_auto_q -> _header_size += _auto_p -> _header_size ; 
-
-#line 137 "../../src/alloc.c"
-_auto_q -> _header_next = _auto_p -> _header_next ; 
-} else 
-#line 139 "../../src/alloc.c"
-_auto_q -> _header_next = _auto_p ; 
-
-#line 140 "../../src/alloc.c"
-allocp = _auto_q ; 
-} ; 
 
 /* the end */

@@ -100,7 +100,7 @@ Pname gen.add(Pname n,int sig)
 			char buf[128];
 			char* bb = n->tp->signature(buf);
 			int l1 = strlen(s);
-			int l2 = bb-buf-1;
+                        int l2 = bb-buf;
 			char* p = new char[l1+l2+1];
 			strcpy(p,s);
 			strcpy(p+l1,buf);

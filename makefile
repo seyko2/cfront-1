@@ -3,8 +3,9 @@
 #	and set CCFLAGS=-DBSD
 #	also set BSD=1
 
-CCFLAGS=-O
+CCFLAGS=-Os
 BSD=
+PATH:=$(CURDIR):$(PATH)
 
 #For first make (bootstrap):
 #	make scratch		#on system V, BSD 4.1 or earlier
@@ -40,7 +41,7 @@ fillscratch:
 	if test ! -d scratch/src; then mkdir scratch/src; fi
 	if test ! -d scratch/mnch; then mkdir scratch/mnch; fi
 	if test ! -d scratch/lib; then mkdir scratch/lib; fi
-	cd src; yacc gram.y
+#       cd src; yacc gram.y
 	cd scratch/src; $(CC) -I../../src -I../../incl -Fc -..c ../../src/*.c;
 	cd scratch/lib; $(CC) -I../../lib/complex \
 		 -I../../incl -Fc -..c ../../lib/new/*.c
@@ -50,5 +51,7 @@ fillscratch:
 #Dont need a real munch here:
 	echo "main(){ exit(0); }" >scratch/mnch/munch..c
 	chmod +x CC patch/CC scratch/bsd.sed
+	cp lib/mk/_stdio..c     scratch/lib/_stdio..c
+	rm -f scratch/lib/exit..c
 
 always:	

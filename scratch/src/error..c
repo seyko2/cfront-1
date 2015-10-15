@@ -94,18 +94,6 @@ extern int F_SENSITIVE ;
 extern int F_OPTIMIZED ; 
 typedef char * va_list ; 
 
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
-
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
 
@@ -244,9 +232,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -255,6 +240,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 
@@ -1375,9 +1384,8 @@ extern int error_init ( )
 static char _static_errbuf [ 1024] ; 
 
 #line 35 "../../src/error.c"
-setbuf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+setbuf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) _static_errbuf ) ; 
 #line 35 "../../src/error.c"
-char * ) _static_errbuf ) ; 
 
 #line 37 "../../src/error.c"
 ( abbrev_tbl [ 'A' ] ) = " argument"; 
@@ -1515,11 +1523,9 @@ static int print_context ( )
 #line 95 "../../src/error.c"
 { 
 #line 95 "../../src/error.c"
-( ( -- out_file -> __iobuf__cnt ) >= 0 ) ? 
+fputc ( ( int ) '\n' , ( struct _iobuf * ) 
 #line 95 "../../src/error.c"
-( ( ( int ) ( ( * ( out_file -> __iobuf__ptr ++ ) ) = 
-#line 95 "../../src/error.c"
-10) ) ) : _flsbuf ( 10, ( struct _iobuf * ) out_file ) ; 
+out_file ) ; 
 } ; 
 
 #line 99 "../../src/error.c"
@@ -1665,11 +1671,9 @@ _auto_ssp != _auto_scp ) ) || ( ( & ( _auto_a [ 2 ] ) ) != (
 #line 150 "../../src/error.c"
 fprintf ( 
 #line 150 "../../src/error.c"
-( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( char 
+( struct _iobuf * ) _get_stderr ( ) , ( char * ) "\n%s: this c can't handle varargs (%d,%d,%d -- %d %d)\n", prog_name , _auto_si , 
 #line 150 "../../src/error.c"
-* ) "\n%s: this c can't handle varargs (%d,%d,%d -- %d %d)\n", prog_name , _auto_si , _auto_scp , _auto_ssp , & ( _auto_a [ 1 ] ) , & 
-#line 150 "../../src/error.c"
-_auto_s ) ; 
+_auto_scp , _auto_ssp , & ( _auto_a [ 1 ] ) , & _auto_s ) ; 
 
 #line 154 "../../src/error.c"
 ext ( 12 ) ; 
@@ -1693,9 +1697,9 @@ in_error ) )
 #line 160 "../../src/error.c"
 { 
 #line 160 "../../src/error.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * 
 #line 160 "../../src/error.c"
-) , ( char * ) "\nUPS!, error while handling error\n") ; 
+) "\nUPS!, error while handling error\n") ; 
 
 #line 162 "../../src/error.c"
 ext ( 13 ) ; 
@@ -1704,21 +1708,17 @@ ext ( 13 ) ;
 if ( _auto_t == 't' ) _auto_t = 'i' ; 
 
 #line 167 "../../src/error.c"
-out_file = ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ; 
+out_file = _get_stderr ( ) ; 
 
 #line 168 "../../src/error.c"
-if ( ! scan_started ) ( ( -- out_file -> __iobuf__cnt ) >= 0 ) ? ( 
+if ( ! scan_started ) fputc ( ( int ) '\n' , ( struct _iobuf * ) out_file ) 
 #line 168 "../../src/error.c"
-( ( int ) ( ( * ( out_file -> __iobuf__ptr ++ ) ) = 10) 
-#line 168 "../../src/error.c"
-) ) : _flsbuf ( 10, ( struct _iobuf * ) out_file ) ; 
+; 
 else 
 #line 171 "../../src/error.c"
-if ( _auto_t == 't' ) ( ( -- out_file -> __iobuf__cnt ) >= 0 ) ? 
+if ( _auto_t == 't' ) fputc ( ( int ) '\n' , ( struct _iobuf * ) 
 #line 171 "../../src/error.c"
-( ( ( int ) ( ( * ( out_file -> __iobuf__ptr ++ ) ) = 
-#line 171 "../../src/error.c"
-10) ) ) : _flsbuf ( 10, ( struct _iobuf * ) out_file ) ; 
+out_file ) ; 
 else 
 #line 173 "../../src/error.c"
 if ( _auto_lc != ( & dummy_loc ) ) _loc_put ( ( struct loc * ) _auto_lc , 
@@ -1920,13 +1920,7 @@ fprintf ( ( struct _iobuf * ) out_file , ( char * ) _auto_format , _auto_a [ _au
 break ; 
 } else 
 #line 250 "../../src/error.c"
-( ( -- out_file -> __iobuf__cnt ) >= 0 ) ? ( ( ( 
-#line 250 "../../src/error.c"
-int ) ( ( * ( out_file -> __iobuf__ptr ++ ) ) = ( ( ( 
-#line 250 "../../src/error.c"
-unsigned int ) ( _auto_c ) ) ) ) ) ) : _flsbuf ( ( ( 
-#line 250 "../../src/error.c"
-unsigned int ) ( _auto_c ) ) , ( struct _iobuf * ) out_file ) ; 
+fputc ( _auto_c , ( struct _iobuf * ) out_file ) ; 
 } 
 #line 253 "../../src/error.c"
 if ( ! scan_started ) ext ( 4 ) ; 
@@ -1934,13 +1928,9 @@ if ( ! scan_started ) ext ( 4 ) ;
 #line 255 "../../src/error.c"
 switch ( _auto_t ) { 
 #line 255 "../../src/error.c"
-case 'd' : case 't' : case 'w' : ( ( -- out_file -> 
+case 'd' : case 't' : case 'w' : fputc ( ( int ) 
 #line 255 "../../src/error.c"
-__iobuf__cnt ) >= 0 ) ? ( ( ( int ) ( ( * ( 
-#line 255 "../../src/error.c"
-out_file -> __iobuf__ptr ++ ) ) = 10) ) ) : _flsbuf ( 10, ( struct _iobuf * 
-#line 255 "../../src/error.c"
-) out_file ) ; 
+'\n' , ( struct _iobuf * ) out_file ) ; 
 
 #line 260 "../../src/error.c"
 break ; 
@@ -1949,9 +1939,7 @@ break ;
 default : print_context ( ) ; 
 } 
 #line 264 "../../src/error.c"
-fflush ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ) 
-#line 264 "../../src/error.c"
-; 
+fflush ( ( struct _iobuf * ) _get_stderr ( ) ) ; 
 
 #line 267 "../../src/error.c"
 out_file = _auto_of ; 
@@ -1976,9 +1964,7 @@ case 0 : case 's' : if ( 20 < ( ++ error_count ) ) {
 #line 276 "../../src/error.c"
 fprintf ( 
 #line 276 "../../src/error.c"
-( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( char 
-#line 276 "../../src/error.c"
-* ) "Sorry, too many errors\n") ; 
+( struct _iobuf * ) _get_stderr ( ) , ( char * ) "Sorry, too many errors\n") ; 
 
 #line 278 "../../src/error.c"
 ext ( 7 ) ; 

@@ -5,5 +5,10 @@ _main()
 {
 	typedef void (*PFV)();
 	extern PFV _ctors[];
+
+       extern int atexit(void*);
+       extern void dtors();
+       atexit((void*)dtors);
+
 	for (PFV* pf=_ctors; *pf; pf++) (**pf)();
 }

@@ -52,14 +52,44 @@ extern int daylight ;
 #line 23 "../../incl/time.h"
 extern char * tzname [ 2] ; 
 
-#line 13 "../../incl/ctype.h"
-extern char _ctype [ ] ; 
-
 #line 32 "../../incl/ctype.h"
 extern int toupper ( ) ; 
 
 #line 33 "../../incl/ctype.h"
 extern int tolower ( ) ; 
+
+#line 35 "../../incl/ctype.h"
+int isalnum ( ) ; 
+
+#line 36 "../../incl/ctype.h"
+int isalpha ( ) ; 
+
+#line 37 "../../incl/ctype.h"
+int iscntrl ( ) ; 
+
+#line 38 "../../incl/ctype.h"
+int isdigit ( ) ; 
+
+#line 39 "../../incl/ctype.h"
+int isgraph ( ) ; 
+
+#line 40 "../../incl/ctype.h"
+int islower ( ) ; 
+
+#line 41 "../../incl/ctype.h"
+int isprint ( ) ; 
+
+#line 42 "../../incl/ctype.h"
+int ispunct ( ) ; 
+
+#line 43 "../../incl/ctype.h"
+int isspace ( ) ; 
+
+#line 44 "../../incl/ctype.h"
+int isupper ( ) ; 
+
+#line 45 "../../incl/ctype.h"
+int isxdigit ( ) ; 
 
 #line 24 "../../src/main.c"
 extern char * ctime ( ) ; 
@@ -73,18 +103,6 @@ long start_time = 0 ;
 #line 26 "../../src/main.c"
 long stop_time = 0 ; 
 typedef char * va_list ; 
-
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
 
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
@@ -224,9 +242,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -235,6 +250,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 
@@ -1474,92 +1513,83 @@ int spy ( _auto_s ) char * _auto_s ;
 #line 66 "../../src/main.c"
 { 
 #line 66 "../../src/main.c"
-if ( _auto_s ) fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] 
+if ( _auto_s ) fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char 
 #line 66 "../../src/main.c"
-) ) , ( char * ) "%s:\n", _auto_s ) ; 
+* ) "%s:\n", _auto_s ) ; 
 
 #line 68 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "files=%d lines=%d tokens=%d\n", Nfile , 
 #line 68 "../../src/main.c"
-char * ) "files=%d lines=%d tokens=%d\n", Nfile , Nline , Ntoken ) ; 
+Nline , Ntoken ) ; 
 
 #line 70 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "Names: distinct=%d global=%d type=%d\n", Nname , 
 #line 70 "../../src/main.c"
-char * ) "Names: distinct=%d global=%d type=%d\n", Nname , ( ( ( ( struct table * ) gtbl ) -> 
+( ( ( ( struct table * ) gtbl ) -> _table_free_slot - 1 ) ) , ( 
 #line 70 "../../src/main.c"
-_table_free_slot - 1 ) ) , ( ( ( ( struct table * ) ktbl ) -> _table_free_slot - 
-#line 70 "../../src/main.c"
-1 ) ) ) ; 
+( ( ( struct table * ) ktbl ) -> _table_free_slot - 1 ) ) ) ; 
 
 #line 71 "../../src/main.c"
-fflush ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ) ; 
-#line 71 "../../src/main.c"
+fflush ( ( struct _iobuf * ) _get_stderr ( ) ) ; 
 
 #line 72 "../../src/main.c"
 if ( start_time && stop_time ) { 
 #line 72 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( 
 #line 72 "../../src/main.c"
-2 ] ) ) , ( char * ) "start time: %s", ctime ( ( long * ) 
+char * ) "start time: %s", ctime ( ( long * ) ( & start_time ) ) ) 
 #line 72 "../../src/main.c"
-( & start_time ) ) ) ; 
-
-#line 74 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
-#line 74 "../../src/main.c"
-char * ) "stop time:  %s", ctime ( ( long * ) ( & stop_time ) ) ) 
-#line 74 "../../src/main.c"
 ; 
 
+#line 74 "../../src/main.c"
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "stop time:  %s", ctime ( 
+#line 74 "../../src/main.c"
+( long * ) ( & stop_time ) ) ) ; 
+
 #line 76 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "real time delay %ld: %d lines per second\n", stop_time - 
 #line 76 "../../src/main.c"
-char * ) "real time delay %ld: %d lines per second\n", stop_time - start_time , Nline / ( stop_time - start_time ) ) ; 
+start_time , Nline / ( ( stop_time - start_time ) + 1 ) ) ; 
 
 #line 77 "../../src/main.c"
-fflush ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ) ; 
-#line 77 "../../src/main.c"
+fflush ( ( struct _iobuf * ) _get_stderr ( ) ) ; 
 } 
 #line 80 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "free store=%dbytes alloc()=%d free()=%d ", 
 #line 80 "../../src/main.c"
-( char * ) "free store=%dbytes alloc()=%d free()=%d ", Nfree_store , Nalloc , Nfree ) ; 
+Nfree_store , Nalloc , Nfree ) ; 
 
 #line 81 "../../src/main.c"
 print_free ( ) ; 
 
 #line 82 "../../src/main.c"
-fflush ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ) ; 
-#line 82 "../../src/main.c"
+fflush ( ( struct _iobuf * ) _get_stderr ( ) ) ; 
 
 #line 86 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "sizeof: n=%d bt=%d f=%d p=%d v=%d e=%d c=%d l=%d\n", 68, 
 #line 86 "../../src/main.c"
-char * ) "sizeof: n=%d bt=%d f=%d p=%d v=%d e=%d c=%d l=%d\n", 68, 36, 52, 16, 20, 24, 24, 16 ) ; 
+36, 52, 16, 20, 24, 24, 16 ) ; 
 
 #line 88 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "alloc(): n=%d bt=%d t=%d e=%d s=%d c=%d str=%d l=%d\n", Nn , 
 #line 88 "../../src/main.c"
-char * ) "alloc(): n=%d bt=%d t=%d e=%d s=%d c=%d str=%d l=%d\n", Nn , Nbt , Nt , Ne , Ns , Nc , Nstr , Nl ) ; 
+Nbt , Nt , Ne , Ns , Nc , Nstr , Nl ) ; 
 
 #line 90 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "free(): n=%d bt=%d t=%d e=%d s=%d c=%d str=? l=%d\n", NFn , 
 #line 90 "../../src/main.c"
-char * ) "free(): n=%d bt=%d t=%d e=%d s=%d c=%d str=? l=%d\n", NFn , NFbt , NFpv + NFf , NFe , NFs , NFc , NFl ) ; 
+NFbt , NFpv + NFf , NFe , NFs , NFc , NFl ) ; 
 
 #line 91 "../../src/main.c"
-fflush ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ) ; 
-#line 91 "../../src/main.c"
+fflush ( ( struct _iobuf * ) _get_stderr ( ) ) ; 
 
 #line 92 "../../src/main.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "%d errors\n", error_count ) 
 #line 92 "../../src/main.c"
-char * ) "%d errors\n", error_count ) ; 
+; 
 
 #line 93 "../../src/main.c"
-fflush ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ) ; 
-#line 93 "../../src/main.c"
+fflush ( ( struct _iobuf * ) _get_stderr ( ) ) ; 
 } ; 
 
 #line 96 "../../src/main.c"
@@ -2127,6 +2157,10 @@ extern char * mktemp ( ) ;
 register char * _auto_cp ; 
 short _auto_i ; 
 
+#line 360 "../../src/main.c"
+( ( out_file = _get_stdout ( ) ) , ( in_file = _get_stdin ( ) ) ) ; 
+#line 360 "../../src/main.c"
+
 #line 361 "../../src/main.c"
 error_init ( ) ; 
 
@@ -2149,9 +2183,7 @@ switch ( * _auto_cp ) {
 #line 367 "../../src/main.c"
 case 't' : fprintf ( ( 
 #line 367 "../../src/main.c"
-struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( char * 
-#line 367 "../../src/main.c"
-) "type check only\n") ; 
+struct _iobuf * ) _get_stderr ( ) , ( char * ) "type check only\n") ; 
 
 #line 370 "../../src/main.c"
 Ssimpl = 0 ; 
@@ -2160,9 +2192,9 @@ Ssimpl = 0 ;
 break ; 
 
 #line 372 "../../src/main.c"
-case 's' : fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) 
+case 's' : fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) 
 #line 372 "../../src/main.c"
-, ( char * ) "syntax check only\n") ; 
+"syntax check only\n") ; 
 
 #line 374 "../../src/main.c"
 Styp = ( Ssimpl = 0 ) ; 
@@ -2193,9 +2225,7 @@ case 'x' : if ( read_align ( afile = ( _auto_cp + 1 ) ) ) {
 #line 386 "../../src/main.c"
 fprintf ( ( 
 #line 386 "../../src/main.c"
-struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( char * 
-#line 386 "../../src/main.c"
-) "bad size-table (option +x)") ; 
+struct _iobuf * ) _get_stderr ( ) , ( char * ) "bad size-table (option +x)") ; 
 
 #line 388 "../../src/main.c"
 exit ( 11 ) ; 
@@ -2228,9 +2258,9 @@ case 'L' : line_format = "\n#line %d \"%s\"\n";
 break ; 
 
 #line 403 "../../src/main.c"
-default : fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) 
+default : fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) 
 #line 403 "../../src/main.c"
-, ( char * ) "%s: unexpected option: +%c ignored\n", prog_name , * _auto_cp ) ; 
+"%s: unexpected option: +%c ignored\n", prog_name , * _auto_cp ) ; 
 
 #line 406 "../../src/main.c"
 break ; 
@@ -2239,9 +2269,9 @@ break ;
 xx : break ; 
 
 #line 411 "../../src/main.c"
-default : fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) 
+default : fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) 
 #line 411 "../../src/main.c"
-, ( char * ) "%s: bad argument \"%s\"\n", prog_name , _auto_cp ) ; 
+"%s: bad argument \"%s\"\n", prog_name , _auto_cp ) ; 
 
 #line 413 "../../src/main.c"
 exit ( 11 ) ; 
@@ -2268,9 +2298,7 @@ start_time = time ( ( long * ) 0 ) ;
 print_align ( afile ) ; 
 } 
 #line 428 "../../src/main.c"
-fflush ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) ) 
-#line 428 "../../src/main.c"
-; 
+fflush ( ( struct _iobuf * ) _get_stderr ( ) ) ; 
 
 #line 429 "../../src/main.c"
 if ( Ssimpl ) print_mode = 3 ; 
@@ -2355,15 +2383,13 @@ if ( src_file_name ) strcpy ( _auto_name + _auto_prefl , src_file_name ) ;
 _auto_p = _auto_name ; 
 
 #line 462 "../../src/main.c"
-while ( * ( ++ _auto_p ) ) if ( ( ! ( ( ( 
+while ( * ( ++ _auto_p ) ) if ( ( ! isalpha ( ( int 
 #line 462 "../../src/main.c"
-_ctype + 1 ) [ * _auto_p ] ) & 3) ) && ( ! ( ( 
+) ( * _auto_p ) ) ) && ( ! isdigit ( ( int ) ( 
 #line 462 "../../src/main.c"
-( _ctype + 1 ) [ * _auto_p ] ) & 04 ) ) ) 
+* _auto_p ) ) ) ) 
 #line 462 "../../src/main.c"
-( * _auto_p ) 
-#line 462 "../../src/main.c"
-= '_' ; 
+( * _auto_p ) = '_' ; 
 
 #line 463 "../../src/main.c"
 { 

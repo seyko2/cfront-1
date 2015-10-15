@@ -10,18 +10,6 @@ int _vec_delete ( ) ;
 #line 1 "../../src/lex.c"
 typedef char * va_list ; 
 
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
-
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
 
@@ -160,9 +148,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -171,6 +156,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 
@@ -1439,14 +1448,10 @@ int curr_file = 0 ;
 struct loc curloc ; 
 
 #line 93 "../../src/lex.c"
-struct _iobuf * out_file = ( struct _iobuf * ) ( & ( _iob [ 1 ] ) ) 
-#line 93 "../../src/lex.c"
-; 
+struct _iobuf * out_file = 0 ; 
 
 #line 94 "../../src/lex.c"
-struct _iobuf * in_file = ( struct _iobuf * ) ( & ( _iob [ 0 ] ) 
-#line 94 "../../src/lex.c"
-) ; 
+struct _iobuf * in_file = 0 ; 
 
 #line 95 "../../src/lex.c"
 Ptable ktbl ; 
@@ -1688,7 +1693,7 @@ _auto_f = ( file_name [ _auto_this -> _loc_file ] ) ;
 if ( _auto_f == 0 ) _auto_f = ( src_file_name ? src_file_name : "") ; 
 
 #line 206 "../../src/lex.c"
-fprintf ( ( struct _iobuf * ) _auto_p , ( char * ) "\"%s\", line %d: ", _auto_f , _auto_this -> _loc_line ) 
+fprintf ( ( struct _iobuf * ) _auto_p , ( char * ) "%s:%d: ", _auto_f , _auto_this -> _loc_line ) 
 #line 206 "../../src/lex.c"
 ; 
 } } ; 
@@ -1722,19 +1727,15 @@ register int _auto_m ;
 = _auto_c ) ) ) ; 
 
 #line 228 "../../src/lex.c"
-while ( ( ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) 
+while ( ( ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) , ( 
 #line 228 "../../src/lex.c"
-? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( 
+( lxmask [ _auto_c + 1 ] ) & _auto_m ) ) ) 
 #line 228 "../../src/lex.c"
-struct _iobuf * ) in_file ) ) ) , ( ( lxmask [ _auto_c + 1 ] ) & 
+( txtmax <= txtfree ) ? errorFI_PC__E ( 
 #line 228 "../../src/lex.c"
-_auto_m ) ) ) 
+( int ) 'i' , ( char * ) "input buffer overflow") : ( ( ( int 
 #line 228 "../../src/lex.c"
-( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char 
-#line 228 "../../src/lex.c"
-* ) "input buffer overflow") : ( ( ( int ) ( ( * ( txtfree ++ 
-#line 228 "../../src/lex.c"
-) ) = _auto_c ) ) ) ; 
+) ( ( * ( txtfree ++ ) ) = _auto_c ) ) ) ; 
 
 #line 229 "../../src/lex.c"
 ungetc ( _auto_c , ( struct _iobuf * ) in_file ) ; 
@@ -1938,11 +1939,7 @@ int _auto_c ;
 _auto_i = 0 ; 
 
 #line 355 "../../src/lex.c"
-_auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * 
-#line 355 "../../src/lex.c"
-( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) 
-#line 355 "../../src/lex.c"
-) ; 
+_auto_c = fgetc ( ( struct _iobuf * ) in_file ) ; 
 
 #line 356 "../../src/lex.c"
 if ( ( lxmask [ _auto_c + 1 ] ) & 010 ) { 
@@ -1951,11 +1948,7 @@ _auto_i = int_val ( _auto_c ) ;
 #line 356 "../../src/lex.c"
 
 #line 358 "../../src/lex.c"
-_auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * 
-#line 358 "../../src/lex.c"
-( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) 
-#line 358 "../../src/lex.c"
-) ; 
+_auto_c = fgetc ( ( struct _iobuf * ) in_file ) ; 
 
 #line 359 "../../src/lex.c"
 if ( ( lxmask [ _auto_c + 1 ] ) & 010 ) { 
@@ -1965,11 +1958,7 @@ _auto_i = ( ( _auto_i <<
 4 ) + int_val ( _auto_c ) ) ; 
 
 #line 361 "../../src/lex.c"
-_auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * 
-#line 361 "../../src/lex.c"
-( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) 
-#line 361 "../../src/lex.c"
-) ; 
+_auto_c = fgetc ( ( struct _iobuf * ) in_file ) ; 
 
 #line 362 "../../src/lex.c"
 if ( ( lxmask [ _auto_c + 1 ] ) & 010 ) { 
@@ -2051,15 +2040,13 @@ char * ) "char constant too long") ;
 goto ex ; 
 } 
 #line 400 "../../src/lex.c"
-switch ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? 
+switch ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 400 "../../src/lex.c"
-( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct 
+case '\'' : 
 #line 400 "../../src/lex.c"
-_iobuf * ) in_file ) ) ) 
-#line 400 "../../src/lex.c"
-{ 
-#line 400 "../../src/lex.c"
-case '\'' : goto ex ; 
+
+#line 402 "../../src/lex.c"
+goto ex ; 
 
 #line 403 "../../src/lex.c"
 case -1: errorFPC__E ( ( char * ) "eof in char constant") ; 
@@ -2081,15 +2068,11 @@ case '\\' : ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char *
 ) = _auto_c ) ) ) ; 
 
 #line 411 "../../src/lex.c"
-switch ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( 
+switch ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 411 "../../src/lex.c"
-( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * 
+case '\n' : ++ 
 #line 411 "../../src/lex.c"
-) in_file ) ) ) 
-#line 411 "../../src/lex.c"
-{ 
-#line 411 "../../src/lex.c"
-case '\n' : ++ curloc . _loc_line ; 
+curloc . _loc_line ; 
 
 #line 414 "../../src/lex.c"
 default : ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * 
@@ -2113,11 +2096,7 @@ case '7' : ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char *
 ) = _auto_c ) ) ) ; 
 
 #line 420 "../../src/lex.c"
-_auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * 
-#line 420 "../../src/lex.c"
-( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) 
-#line 420 "../../src/lex.c"
-) ; 
+_auto_c = fgetc ( ( struct _iobuf * ) in_file ) ; 
 
 #line 421 "../../src/lex.c"
 if ( ( ( lxmask [ _auto_c + 1 ] ) & 02 ) && ( _auto_c < '8' ) 
@@ -2133,11 +2112,7 @@ if ( ( ( lxmask [ _auto_c + 1 ] ) & 02 ) && ( _auto_c < '8' )
 ) = _auto_c ) ) ) ; 
 
 #line 423 "../../src/lex.c"
-_auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * 
-#line 423 "../../src/lex.c"
-( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) 
-#line 423 "../../src/lex.c"
-) ; 
+_auto_c = fgetc ( ( struct _iobuf * ) in_file ) ; 
 
 #line 424 "../../src/lex.c"
 if ( ( ( lxmask [ _auto_c + 1 ] ) & 02 ) && ( _auto_c < '8' ) 
@@ -2209,17 +2184,13 @@ int lxcom ( )
 register int _auto_c ; 
 
 #line 452 "../../src/lex.c"
-for ( ;;) switch ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+for ( ;;) switch ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 452 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 452 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 453 "../../src/lex.c"
-{ 
-#line 453 "../../src/lex.c"
-case -1: errorFPC__E ( ( char * 
-#line 453 "../../src/lex.c"
-) "eof in comment") ; 
+
+#line 454 "../../src/lex.c"
+case -1: errorFPC__E ( ( char * ) "eof in comment") ; 
 
 #line 456 "../../src/lex.c"
 { 
@@ -2236,11 +2207,9 @@ Nline ++ ;
 break ; 
 
 #line 461 "../../src/lex.c"
-case '*' : if ( ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case '*' : if ( ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) == 
 #line 461 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 461 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) == '/' ) 
+'/' ) 
 #line 462 "../../src/lex.c"
 { 
 #line 462 "../../src/lex.c"
@@ -2253,15 +2222,11 @@ ungetc ( _auto_c , ( struct _iobuf * ) in_file ) ;
 break ; 
 
 #line 465 "../../src/lex.c"
-case '/' : if ( ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case '/' : if ( ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) == 
 #line 465 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 465 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) == '*' ) 
+'*' ) 
 #line 466 "../../src/lex.c"
-errorFI_PC__E ( ( int ) 'w' , 
-#line 466 "../../src/lex.c"
-( char * ) "``/*'' in comment") ; 
+errorFI_PC__E ( ( int ) 'w' , ( char * ) "``/*'' in comment") ; 
 
 #line 467 "../../src/lex.c"
 ungetc ( _auto_c , ( struct _iobuf * ) in_file ) ; 
@@ -2278,17 +2243,13 @@ int linecom ( )
 register int _auto_c ; 
 
 #line 478 "../../src/lex.c"
-for ( ;;) switch ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+for ( ;;) switch ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 478 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 478 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 479 "../../src/lex.c"
-{ 
-#line 479 "../../src/lex.c"
-case -1: errorFPC__E ( ( char * 
-#line 479 "../../src/lex.c"
-) "eof in comment") ; 
+
+#line 480 "../../src/lex.c"
+case -1: errorFPC__E ( ( char * ) "eof in comment") ; 
 
 #line 482 "../../src/lex.c"
 { 
@@ -2343,11 +2304,7 @@ _auto_lxchar = saved ;
 saved = 0 ; 
 } else 
 #line 510 "../../src/lex.c"
-_auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( 
-#line 510 "../../src/lex.c"
-( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * 
-#line 510 "../../src/lex.c"
-) in_file ) ) ; 
+_auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ; 
 
 #line 512 "../../src/lex.c"
 switch ( ( _auto_p = ( lxcp [ _auto_lxchar + 1 ] ) ) -> _LXDOPE_lxact ) { 
@@ -2516,19 +2473,17 @@ if ( _auto_lxchar == '0' ) {
 ( txtfree ++ ) ) = '0' ) ) ) ; 
 
 #line 562 "../../src/lex.c"
-switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( 
+switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 562 "../../src/lex.c"
-( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * 
+case 'l' : case 
 #line 562 "../../src/lex.c"
-) in_file ) ) ) 
-#line 562 "../../src/lex.c"
-{ 
-#line 562 "../../src/lex.c"
-case 'l' : case 'L' : ( txtmax <= txtfree ) ? errorFI_PC__E ( 
-#line 562 "../../src/lex.c"
-( int ) 'i' , ( char * ) "input buffer overflow") : ( ( ( int 
-#line 562 "../../src/lex.c"
-) ( ( * ( txtfree ++ ) ) = 'L' ) ) ) ; 
+'L' : 
+#line 565 "../../src/lex.c"
+( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) 
+#line 565 "../../src/lex.c"
+"input buffer overflow") : ( ( ( int ) ( ( * ( txtfree ++ ) ) 
+#line 565 "../../src/lex.c"
+= 'L' ) ) ) ; 
 
 #line 566 "../../src/lex.c"
 ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) "input buffer overflow") 
@@ -2558,15 +2513,13 @@ if ( ( txtfree - txtstart ) < 4 ) errorFPC__E ( ( char * ) "hexadecimal digitX a
 #line 571 "../../src/lex.c"
 
 #line 573 "../../src/lex.c"
-switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( 
+switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 573 "../../src/lex.c"
-( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * 
+case 'l' : case 
 #line 573 "../../src/lex.c"
-) in_file ) ) ) 
-#line 573 "../../src/lex.c"
-{ 
-#line 573 "../../src/lex.c"
-case 'l' : case 'L' : txtfree -- ; 
+'L' : 
+#line 576 "../../src/lex.c"
+txtfree -- ; 
 
 #line 577 "../../src/lex.c"
 ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) "input buffer overflow") 
@@ -2616,17 +2569,13 @@ case '7' : ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char *
 ) = _auto_lxchar ) ) ) ; 
 
 #line 596 "../../src/lex.c"
-ox : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? 
-#line 596 "../../src/lex.c"
-( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct 
-#line 596 "../../src/lex.c"
-_iobuf * ) in_file ) ) ) 
+ox : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 597 "../../src/lex.c"
-{ 
+case '8' : 
 #line 597 "../../src/lex.c"
-case '8' : case '9' : errorFPC__E ( ( char * 
-#line 597 "../../src/lex.c"
-) "8 or 9 used as octal digit") ; 
+
+#line 599 "../../src/lex.c"
+case '9' : errorFPC__E ( ( char * ) "8 or 9 used as octal digit") ; 
 
 #line 601 "../../src/lex.c"
 case '0' : case '1' : case '2' : case '3' : case '4' : case '5' : case '6' : 
@@ -2710,14 +2659,12 @@ return ;
 lxget ( _auto_lxchar , 02 ) ; 
 
 #line 632 "../../src/lex.c"
-if ( ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? 
+if ( ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) == '.' ) { 
 #line 632 "../../src/lex.c"
-( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct 
+
 #line 632 "../../src/lex.c"
-_iobuf * ) in_file ) ) ) == '.' ) 
-#line 632 "../../src/lex.c"
-{ 
-#line 632 "../../src/lex.c"
+
+#line 633 "../../src/lex.c"
 txtfree -- ; 
 
 #line 634 "../../src/lex.c"
@@ -2727,11 +2674,7 @@ lxget ( ( int ) '.' , 02 ) ;
 getfp : _auto_ret = 83 ; 
 
 #line 637 "../../src/lex.c"
-_auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * 
-#line 637 "../../src/lex.c"
-( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) 
-#line 637 "../../src/lex.c"
-) ; 
+_auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ; 
 } 
 #line 638 "../../src/lex.c"
 ; 
@@ -2742,19 +2685,17 @@ switch ( _auto_lxchar ) {
 case 'e' : case 'E' : txtfree -- ; 
 
 #line 644 "../../src/lex.c"
-switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( 
+switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 644 "../../src/lex.c"
-( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * 
+case '-' : case 
 #line 644 "../../src/lex.c"
-) in_file ) ) ) 
-#line 644 "../../src/lex.c"
-{ 
-#line 644 "../../src/lex.c"
-case '-' : case '+' : ( txtmax <= txtfree ) ? errorFI_PC__E ( 
-#line 644 "../../src/lex.c"
-( int ) 'i' , ( char * ) "input buffer overflow") : ( ( ( int 
-#line 644 "../../src/lex.c"
-) ( ( * ( txtfree ++ ) ) = 'e' ) ) ) ; 
+'+' : 
+#line 647 "../../src/lex.c"
+( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) 
+#line 647 "../../src/lex.c"
+"input buffer overflow") : ( ( ( int ) ( ( * ( txtfree ++ ) ) 
+#line 647 "../../src/lex.c"
+= 'e' ) ) ) ; 
 
 #line 648 "../../src/lex.c"
 break ; 
@@ -2819,21 +2760,15 @@ return ;
 ; 
 
 #line 668 "../../src/lex.c"
-case 8 : if ( ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 8 : if ( ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) == 
 #line 668 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 668 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) == '.' ) 
+'.' ) 
 #line 669 "../../src/lex.c"
 { 
 #line 669 "../../src/lex.c"
-if ( ( _auto_lxchar = 
+if ( ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) != 
 #line 669 "../../src/lex.c"
-( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * ( 
-#line 669 "../../src/lex.c"
-in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) ) 
-#line 669 "../../src/lex.c"
-) != '.' ) 
+'.' ) 
 #line 670 "../../src/lex.c"
 { 
 #line 670 "../../src/lex.c"
@@ -2889,28 +2824,20 @@ return ;
 ; 
 
 #line 684 "../../src/lex.c"
-case 4 : for ( ;;) switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) 
+case 4 : for ( ;;) switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) 
 #line 684 "../../src/lex.c"
->= 0 ) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) 
-#line 684 "../../src/lex.c"
-: _filbuf ( ( struct _iobuf * ) in_file ) ) ) 
+) 
 #line 687 "../../src/lex.c"
 { 
 #line 687 "../../src/lex.c"
-case '\\' : ( txtmax <= 
+case '\\' : ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( 
 #line 687 "../../src/lex.c"
-txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) "input buffer overflow") : ( 
+char * ) "input buffer overflow") : ( ( ( int ) ( ( * ( 
 #line 687 "../../src/lex.c"
-( ( int ) ( ( * ( txtfree ++ ) ) = '\\' ) ) 
-#line 687 "../../src/lex.c"
-) ; 
+txtfree ++ ) ) = '\\' ) ) ) ; 
 
 #line 690 "../../src/lex.c"
-_auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * 
-#line 690 "../../src/lex.c"
-( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) 
-#line 690 "../../src/lex.c"
-) ; 
+_auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ; 
 
 #line 691 "../../src/lex.c"
 if ( _auto_lxchar == 'x' ) hex_to_oct ( ) ; 
@@ -3036,11 +2963,7 @@ txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) "input buffer overflow") : 
 #line 722 "../../src/lex.c"
 ( ( int ) ( ( * ( txtfree ++ ) ) = ( _auto_j = 
 #line 722 "../../src/lex.c"
-( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * ( 
-#line 722 "../../src/lex.c"
-in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) ) 
-#line 722 "../../src/lex.c"
-) ) ) ) ; 
+fgetc ( ( struct _iobuf * ) in_file ) ) ) ) ) ; 
 
 #line 724 "../../src/lex.c"
 if ( _auto_j == '`' ) break ; 
@@ -3069,14 +2992,12 @@ return ;
 ; 
 } 
 #line 732 "../../src/lex.c"
-case 7 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 7 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 732 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 732 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 733 "../../src/lex.c"
-{ 
-#line 733 "../../src/lex.c"
+
+#line 734 "../../src/lex.c"
 case '*' : lxcom ( ) ; 
 
 #line 736 "../../src/lex.c"
@@ -3223,19 +3144,15 @@ return ;
 ; 
 
 #line 781 "../../src/lex.c"
-case 17 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) 
-#line 781 "../../src/lex.c"
-? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( 
-#line 781 "../../src/lex.c"
-struct _iobuf * ) in_file ) ) ) 
+case 17 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 782 "../../src/lex.c"
+case 
+#line 782 "../../src/lex.c"
+'=' : 
+#line 784 "../../src/lex.c"
 { 
-#line 782 "../../src/lex.c"
-case '=' : { 
 #line 784 "../../src/lex.c"
-addtok ( 92 , ( ( 
-#line 784 "../../src/lex.c"
-_auto__Xy_rtFI___global . __C10_t = 62 ) , _auto__Xy_rtFI___global ) ) ; 
+addtok ( 92 , ( ( _auto__Xy_rtFI___global . __C10_t = 62 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 784 "../../src/lex.c"
 { 
@@ -3262,20 +3179,17 @@ return ;
 ; 
 } 
 #line 790 "../../src/lex.c"
-case 28 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 28 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 790 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 790 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 791 "../../src/lex.c"
-{ 
-#line 791 "../../src/lex.c"
+
+#line 792 "../../src/lex.c"
 case ':' : { 
 #line 793 "../../src/lex.c"
-addtok ( 160 , ( 
+addtok ( 160 , ( ( _auto__Xy_rtFI___global . __C10_t = ( ( int ) 0 
 #line 793 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = ( ( int ) 0 ) ) , _auto__Xy_rtFI___global ) ) ; 
-#line 793 "../../src/lex.c"
+) ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 793 "../../src/lex.c"
 { 
@@ -3318,19 +3232,16 @@ return ;
 ; 
 } 
 #line 801 "../../src/lex.c"
-case 24 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 24 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 801 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 801 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 802 "../../src/lex.c"
-{ 
-#line 802 "../../src/lex.c"
+
+#line 803 "../../src/lex.c"
 case '=' : { 
 #line 804 "../../src/lex.c"
-addtok ( 92 , ( 
+addtok ( 92 , ( ( _auto__Xy_rtFI___global . __C10_t = 63 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 804 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 63 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 804 "../../src/lex.c"
 { 
@@ -3357,29 +3268,21 @@ return ;
 ; 
 } 
 #line 809 "../../src/lex.c"
-case 19 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 19 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 809 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 809 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
-#line 810 "../../src/lex.c"
-{ 
-#line 810 "../../src/lex.c"
-case '>' : switch ( _auto_lxchar = ( 
-#line 810 "../../src/lex.c"
-( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * ( in_file -> 
-#line 810 "../../src/lex.c"
-__iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) ) ) 
+
 #line 810 "../../src/lex.c"
 
+#line 811 "../../src/lex.c"
+case '>' : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 812 "../../src/lex.c"
+case 
+#line 812 "../../src/lex.c"
+'=' : 
+#line 814 "../../src/lex.c"
 { 
-#line 812 "../../src/lex.c"
-case '=' : { 
 #line 814 "../../src/lex.c"
-addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 135 ) , _auto__Xy_rtFI___global ) ) 
-#line 814 "../../src/lex.c"
-; 
+addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 135 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 814 "../../src/lex.c"
 { 
@@ -3440,29 +3343,21 @@ return ;
 ; 
 } 
 #line 826 "../../src/lex.c"
-case 18 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 18 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 826 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 826 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
-#line 827 "../../src/lex.c"
-{ 
-#line 827 "../../src/lex.c"
-case '<' : switch ( _auto_lxchar = ( 
-#line 827 "../../src/lex.c"
-( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? ( ( * ( in_file -> 
-#line 827 "../../src/lex.c"
-__iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct _iobuf * ) in_file ) ) ) 
+
 #line 827 "../../src/lex.c"
 
+#line 828 "../../src/lex.c"
+case '<' : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 829 "../../src/lex.c"
+case 
+#line 829 "../../src/lex.c"
+'=' : 
+#line 831 "../../src/lex.c"
 { 
-#line 829 "../../src/lex.c"
-case '=' : { 
 #line 831 "../../src/lex.c"
-addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 134 ) , _auto__Xy_rtFI___global ) ) 
-#line 831 "../../src/lex.c"
-; 
+addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 134 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 831 "../../src/lex.c"
 { 
@@ -3520,19 +3415,16 @@ return ;
 ; 
 } 
 #line 842 "../../src/lex.c"
-case 22 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 22 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 842 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 842 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 843 "../../src/lex.c"
-{ 
-#line 843 "../../src/lex.c"
+
+#line 844 "../../src/lex.c"
 case '&' : { 
 #line 845 "../../src/lex.c"
-addtok ( 66 , ( 
+addtok ( 66 , ( ( _auto__Xy_rtFI___global . __C10_t = 66 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 845 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 66 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 845 "../../src/lex.c"
 { 
@@ -3573,19 +3465,16 @@ return ;
 ; 
 } 
 #line 852 "../../src/lex.c"
-case 21 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 21 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 852 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 852 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 853 "../../src/lex.c"
-{ 
-#line 853 "../../src/lex.c"
+
+#line 854 "../../src/lex.c"
 case '|' : { 
 #line 855 "../../src/lex.c"
-addtok ( 67 , ( 
+addtok ( 67 , ( ( _auto__Xy_rtFI___global . __C10_t = 67 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 855 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 67 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 855 "../../src/lex.c"
 { 
@@ -3626,19 +3515,16 @@ return ;
 ; 
 } 
 #line 862 "../../src/lex.c"
-case 20 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 20 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 862 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 862 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 863 "../../src/lex.c"
-{ 
-#line 863 "../../src/lex.c"
+
+#line 864 "../../src/lex.c"
 case '=' : { 
 #line 865 "../../src/lex.c"
-addtok ( 90 , ( 
+addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 133 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 865 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 133 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 865 "../../src/lex.c"
 { 
@@ -3665,19 +3551,16 @@ return ;
 ; 
 } 
 #line 870 "../../src/lex.c"
-case 27 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 27 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 870 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 870 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 871 "../../src/lex.c"
-{ 
-#line 871 "../../src/lex.c"
+
+#line 872 "../../src/lex.c"
 case '=' : { 
 #line 873 "../../src/lex.c"
-addtok ( 90 , ( 
+addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 126 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 873 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 126 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 873 "../../src/lex.c"
 { 
@@ -3718,19 +3601,16 @@ return ;
 ; 
 } 
 #line 880 "../../src/lex.c"
-case 25 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 25 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 880 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 880 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 881 "../../src/lex.c"
-{ 
-#line 881 "../../src/lex.c"
+
+#line 882 "../../src/lex.c"
 case '=' : { 
 #line 883 "../../src/lex.c"
-addtok ( 90 , ( 
+addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 127 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 883 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 127 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 883 "../../src/lex.c"
 { 
@@ -3785,19 +3665,16 @@ return ;
 ; 
 } 
 #line 892 "../../src/lex.c"
-case 26 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 26 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 892 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 892 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 893 "../../src/lex.c"
-{ 
-#line 893 "../../src/lex.c"
+
+#line 894 "../../src/lex.c"
 case '=' : { 
 #line 895 "../../src/lex.c"
-addtok ( 90 , ( 
+addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 128 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 895 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 128 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 895 "../../src/lex.c"
 { 
@@ -3827,19 +3704,16 @@ return ;
 ; 
 } 
 #line 902 "../../src/lex.c"
-case 23 : switch ( _auto_lxchar = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+case 23 : switch ( _auto_lxchar = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 902 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 902 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 903 "../../src/lex.c"
-{ 
-#line 903 "../../src/lex.c"
+
+#line 904 "../../src/lex.c"
 case '=' : { 
 #line 905 "../../src/lex.c"
-addtok ( 90 , ( 
+addtok ( 90 , ( ( _auto__Xy_rtFI___global . __C10_t = 130 ) , _auto__Xy_rtFI___global ) ) ; 
 #line 905 "../../src/lex.c"
-( _auto__Xy_rtFI___global . __C10_t = 130 ) , _auto__Xy_rtFI___global ) ) ; 
 
 #line 905 "../../src/lex.c"
 { 
@@ -3884,18 +3758,15 @@ register int _auto_c ;
 char * _auto_fn ; 
 
 #line 928 "../../src/lex.c"
-for ( ;;) switch ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+for ( ;;) switch ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 928 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 928 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 929 "../../src/lex.c"
-{ 
-#line 929 "../../src/lex.c"
+
+#line 930 "../../src/lex.c"
 default : { 
 #line 931 "../../src/lex.c"
 { _auto__result = _auto_c ; 
-#line 931 "../../src/lex.c"
 
 #line 931 "../../src/lex.c"
 return _auto__result ; 
@@ -3916,41 +3787,33 @@ ll : break ;
 case '#' : curloc . _loc_line = 0 ; 
 
 #line 942 "../../src/lex.c"
-for ( ;;) switch ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+for ( ;;) switch ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 942 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 942 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
+
 #line 943 "../../src/lex.c"
-{ 
-#line 943 "../../src/lex.c"
+
+#line 944 "../../src/lex.c"
 case '"' : txtstart = txtfree ; 
 
 #line 946 "../../src/lex.c"
-for ( ;;) switch ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 
+for ( ;;) switch ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) { 
 #line 946 "../../src/lex.c"
-) ? ( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( 
-#line 946 "../../src/lex.c"
-( struct _iobuf * ) in_file ) ) ) 
-#line 947 "../../src/lex.c"
-{ 
-#line 947 "../../src/lex.c"
-case '"' : ( txtmax <= txtfree ) ? 
-#line 947 "../../src/lex.c"
-errorFI_PC__E ( ( int ) 'i' , ( char * ) "input buffer overflow") : ( ( ( 
-#line 947 "../../src/lex.c"
-int ) ( ( * ( txtfree ++ ) ) = '\0' ) ) ) ; 
+
 #line 947 "../../src/lex.c"
 
+#line 948 "../../src/lex.c"
+case '"' : ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * 
+#line 948 "../../src/lex.c"
+) "input buffer overflow") : ( ( ( int ) ( ( * ( txtfree ++ ) 
+#line 948 "../../src/lex.c"
+) = '\0' ) ) ) ; 
+
 #line 950 "../../src/lex.c"
-if ( ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? 
+while ( ( ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) != '\n' ) 
 #line 950 "../../src/lex.c"
-( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct 
+&& ( _auto_c != -1) ) 
 #line 950 "../../src/lex.c"
-_iobuf * ) in_file ) ) ) != '\n' ) 
-#line 950 "../../src/lex.c"
-errorFPC__E ( ( char * ) "unX eol on # line") ; 
-#line 950 "../../src/lex.c"
+; 
 
 #line 951 "../../src/lex.c"
 if ( * txtstart ) { 
@@ -4062,20 +3925,16 @@ default : ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char *
 #line 1004 "../../src/lex.c"
 : ( ( ( int ) ( ( * ( txtfree ++ ) ) = 
 #line 1004 "../../src/lex.c"
-'i' ) ) ) ; 
+_auto_c ) ) ) ; 
 
 #line 1005 "../../src/lex.c"
-while ( ( _auto_c = ( ( ( -- in_file -> __iobuf__cnt ) >= 0 ) ? 
+while ( ( _auto_c = fgetc ( ( struct _iobuf * ) in_file ) ) != '\n' ) ( 
 #line 1005 "../../src/lex.c"
-( ( * ( in_file -> __iobuf__ptr ++ ) ) & 0377 ) : _filbuf ( ( struct 
+txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) "input buffer overflow") : 
 #line 1005 "../../src/lex.c"
-_iobuf * ) in_file ) ) ) != '\n' ) 
+( ( ( int ) ( ( * ( txtfree ++ ) ) = _auto_c ) 
 #line 1005 "../../src/lex.c"
-( txtmax <= txtfree ) ? errorFI_PC__E ( ( int 
-#line 1005 "../../src/lex.c"
-) 'i' , ( char * ) "input buffer overflow") : ( ( ( int ) ( 
-#line 1005 "../../src/lex.c"
-( * ( txtfree ++ ) ) = _auto_c ) ) ) ; 
+) ) ; 
 
 #line 1006 "../../src/lex.c"
 ( txtmax <= txtfree ) ? errorFI_PC__E ( ( int ) 'i' , ( char * ) "input buffer overflow") 

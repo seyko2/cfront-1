@@ -73,7 +73,7 @@ void spy(char* s)
 		fprintf(stderr,"start time: %s", ctime(&start_time) );
 		fprintf(stderr,"stop time:  %s", ctime(&stop_time) );
 		fprintf(stderr,"real time delay %ld: %d lines per second\n",
-			stop_time-start_time, Nline/(stop_time-start_time) );
+                        stop_time-start_time, Nline/(stop_time-start_time+1) );
 		fflush(stderr);
 	}
 	fprintf(stderr,"free store=%dbytes alloc()=%d free()=%d ",
@@ -357,7 +357,7 @@ main(int argc, char* argv[])
 	(void) signal(SIGQUIT,sig_exit);
 */
 
-
+       out_file = stdout, in_file = stdin;
 	error_init();
 
 	for (i=1; i<argc; ++i) {

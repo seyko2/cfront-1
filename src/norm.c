@@ -293,8 +293,8 @@ Pbase basetype.check(Pname n)
 			/* use a single base saved in the keyword */
 //fprintf(stderr,"type %d bn %d %s q %d\n",this,b_name,b_name->string,b_name->n_qualifier);
 			if (b_name->n_qualifier) {
-				delete this;
-				return (Pbase)b_name->n_qualifier;
+                                Pbase b = (Pbase)b_name->n_qualifier;
+                               delete this; return b;
 			}
 			else {
 				PERM(this);

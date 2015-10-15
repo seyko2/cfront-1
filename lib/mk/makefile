@@ -3,19 +3,21 @@ O_COMPLEX	=	abs.o arg.o cos.o error.o exp.o io.o log.o oper.o \
 			polar.o pow.o sin.o sqrt.o
 O_GENERIC	=	generic.o
 O_NEW		=	_delete.o _handler.o _new.o _vec.o
-O_STATIC	=	_ctor.o _dtor.o _main.o exit.o dtors.o
+O_STATIC       =       _ctor.o _dtor.o _main.o dtors.o _stdio.o #exit.o
 O_STREAM	=	circbuf.o filebuf.o in.o out.o streambuf.o
 O_TASK		=	obj.o qhead.o qtail.o sched.o sim.o \
 			swap.o task.o timer.o
 OFILES	=	$(O_COMPLEX) $(O_GENERIC) $(O_NEW) \
-			$(O_STATIC) $(O_STREAM) $(O_TASK)
+                       $(O_STATIC) $(O_STREAM) #$(O_TASK)
 CC	=	CC
 CCFLAGS	=
 
-libC.a:	$(O_COMPLEX) $(O_GENERIC) $(O_NEW) $(O_STATIC) $(O_STREAM) Task
+libC.a:        $(O_COMPLEX) $(O_GENERIC) $(O_NEW) $(O_STATIC) $(O_STREAM) #Task
 	ar r libC.a $(OFILES)
 	if test "$(BSD)" ; then ranlib libC.a; fi
 
+_stdio.o : _stdio..c
+	gcc -c $< -o $@
 
 Task:
 	if vax; then \

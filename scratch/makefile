@@ -1,6 +1,6 @@
 #ident	"@(#)cfront:scratch/makefile	1.3"
 LIBFILES=_ctor..o _delete..o _dtor..o _handler..o \
-_main..o _new..o _vec..o dtors..o exit..o
+_main..o _new..o _vec..o dtors..o _stdio..o #exit..o
 
 SRCFILES=alloc..o dcl..o dcl2..o del..o error..o \
 expand..o expr..o expr2..o lalex..o lex..o \
@@ -22,6 +22,9 @@ munch:	mnch/munch..c libC.a
 
 cfront: libC.a $(SRCFILES)
 	cc -o cfront $(SRCFILES) libC.a
+
+_stdio..o:	lib/_stdio..c
+	cc -c lib/_stdio..c
 
 _ctor..o:	lib/_ctor..c
 	cc -c lib/_ctor..c

@@ -10,18 +10,6 @@ int _vec_delete ( ) ;
 #line 1 "../../src/size.c"
 typedef char * va_list ; 
 
-#line 12 "../../incl/stdio.h"
-struct _iobuf { /* sizeof = 16 */
-int __iobuf__cnt ; 
-char * __iobuf__ptr ; 
-char * __iobuf__base ; 
-char __iobuf__flag ; 
-char __iobuf__file ; 
-} ; 
-
-#line 20 "../../incl/stdio.h"
-extern struct _iobuf _iob [ 20] ; 
-
 #line 36 "../../incl/stdio.h"
 extern int _flsbuf ( ) ; 
 
@@ -160,9 +148,6 @@ extern int setvbuf ( ) ;
 #line 106 "../../incl/stdio.h"
 extern int perror ( ) ; 
 
-#line 108 "../../incl/stdio.h"
-extern int errno ; 
-
 #line 109 "../../incl/stdio.h"
 extern char * sys_errlist [ ] ; 
 
@@ -171,6 +156,30 @@ extern int sys_nerr ;
 
 #line 111 "../../incl/stdio.h"
 extern unsigned char * _bufendtab [ ] ; 
+
+#line 113 "../../incl/stdio.h"
+int feof ( ) ; 
+
+#line 114 "../../incl/stdio.h"
+int ferror ( ) ; 
+
+#line 115 "../../incl/stdio.h"
+int fileno ( ) ; 
+
+#line 116 "../../incl/stdio.h"
+char * strerror ( ) ; 
+
+#line 118 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdin ( ) ; 
+
+#line 119 "../../incl/stdio.h"
+extern struct _iobuf * _get_stdout ( ) ; 
+
+#line 120 "../../incl/stdio.h"
+extern struct _iobuf * _get_stderr ( ) ; 
+
+#line 132 "../../incl/stdio.h"
+int _main ( ) ; 
 
 #line 6 "../../src/token.h"
 extern int lex_clear ( ) ; 
@@ -1796,74 +1805,73 @@ extern int print_align ( _auto_s ) char * _auto_s ;
 int _auto__result ; 
 
 #line 168 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "%s sizes and alignments\n\n", _auto_s ) 
 #line 168 "../../src/size.c"
-char * ) "%s sizes and alignments\n\n", _auto_s ) ; 
+; 
 
 #line 170 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "   size    align\n") ; 
 #line 170 "../../src/size.c"
-char * ) "	size	align\n") ; 
 
 #line 171 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "char       %d      %d\n", SZ_CHAR , 
 #line 171 "../../src/size.c"
-char * ) "char	%d	%d\n", SZ_CHAR , AL_CHAR ) ; 
+AL_CHAR ) ; 
 
 #line 172 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "short      %d      %d\n", SZ_SHORT , 
 #line 172 "../../src/size.c"
-char * ) "short	%d	%d\n", SZ_SHORT , AL_SHORT ) ; 
+AL_SHORT ) ; 
 
 #line 173 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "int        %d      %d\n", SZ_INT , 
 #line 173 "../../src/size.c"
-char * ) "int	%d	%d\n", SZ_INT , AL_INT ) ; 
+AL_INT ) ; 
 
 #line 174 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "long       %d      %d\n", SZ_LONG , 
 #line 174 "../../src/size.c"
-char * ) "long	%d	%d\n", SZ_LONG , AL_LONG ) ; 
+AL_LONG ) ; 
 
 #line 175 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "float      %d      %d\n", SZ_FLOAT , 
 #line 175 "../../src/size.c"
-char * ) "float	%d	%d\n", SZ_FLOAT , AL_FLOAT ) ; 
+AL_FLOAT ) ; 
 
 #line 176 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "double     %d      %d\n", SZ_DOUBLE , 
 #line 176 "../../src/size.c"
-char * ) "double	%d	%d\n", SZ_DOUBLE , AL_DOUBLE ) ; 
+AL_DOUBLE ) ; 
 
 #line 177 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "bptr       %d      %d\n", SZ_BPTR , 
 #line 177 "../../src/size.c"
-char * ) "bptr	%d	%d\n", SZ_BPTR , AL_BPTR ) ; 
+AL_BPTR ) ; 
 
 #line 178 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "wptr       %d      %d\n", SZ_WPTR , 
 #line 178 "../../src/size.c"
-char * ) "wptr	%d	%d\n", SZ_WPTR , AL_WPTR ) ; 
+AL_WPTR ) ; 
 
 #line 179 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "struct     %d      %d\n", SZ_STRUCT , 
 #line 179 "../../src/size.c"
-char * ) "struct	%d	%d\n", SZ_STRUCT , AL_STRUCT ) ; 
+AL_STRUCT ) ; 
 
 #line 180 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "frame      %d      %d\n", SZ_FRAME , 
 #line 180 "../../src/size.c"
-char * ) "frame	%d	%d\n", SZ_FRAME , AL_FRAME ) ; 
+AL_FRAME ) ; 
 
 #line 181 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "large   %s\n\n", LARGEST_INT ) 
 #line 181 "../../src/size.c"
-char * ) "large   %s\n\n", LARGEST_INT ) ; 
+; 
 
 #line 184 "../../src/size.c"
-fprintf ( ( struct _iobuf * ) ( & ( _iob [ 2 ] ) ) , ( 
+fprintf ( ( struct _iobuf * ) _get_stderr ( ) , ( char * ) "%d bits in a byte, %d bits in a word, %d bytes in a word\n", BI_IN_BYTE , 
 #line 184 "../../src/size.c"
-char * ) "%d bits in a byte, %d bits in a word, %d bytes in a word\n", BI_IN_BYTE , BI_IN_WORD , SZ_WORD ) ; 
+BI_IN_WORD , SZ_WORD ) ; 
 
 #line 185 "../../src/size.c"
 { 
