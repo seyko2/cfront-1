@@ -76,9 +76,7 @@ int expr.lval(TOK oper)
 			return 0;
 		}
 	}
-//error('d',"lval %s",es);
 	forever {
-//error('d',"ee %d %k",ee->base,ee->base);
 		switch (ee->base) {
 		case G_CALL:
 		case CALL:
@@ -126,10 +124,8 @@ int expr.lval(TOK oper)
 	//		break;
 
 		case DOT:
-//error('d',"lval dot: %k",ee->e1->base);
 			switch (ee->e1->base) {		// update use counts, etc.
 			case NAME:
-//error('d',"lval dot: %n (oper %d)",Pname(ee->e1),oper);
 				switch (oper) {
 				case ADDROF:
 				case G_ADDROF:	Pname(ee->e1)->take_addr();
@@ -141,7 +137,6 @@ int expr.lval(TOK oper)
 				Pexpr e = ee->e1;
 				do e=e->e1; while(e->base==DOT);
 				if (e->base == NAME) {
-//error('d',"lval dot.dot: %n (oper %d)",Pname(e),oper);
 					switch (oper) {
 					case ADDROF:
 					case G_ADDROF:	Pname(e)->take_addr();
@@ -256,14 +251,12 @@ bit gen_match(Pname n, Pexpr arg)
 
 		Ptype nt = nn->tp;
 
-//error('d',"nt %t at %t",nt,at);
 		switch (nt->base) {
 		case RPTR:
 			if (at == zero_type) return 0; //break;
 			if (nt->check(at,COERCE)) {
 				Pptr pt = at->addrof();
 				nt->base = PTR;		// handle derived classes
-//error('d',"ptr nt %t pt %t",nt,pt);
 				if (nt->check(pt,COERCE)) {
 					nt->base = RPTR;
 					delete pt;
@@ -277,7 +270,6 @@ bit gen_match(Pname n, Pexpr arg)
 			if (nt->check(at,COERCE)) return 0;
 		}
 	}
-//error('d',"nn %d init %d",nn,nn?nn->n_initializer:0);
 	if (nn) {
 		Ninit = nn->n_initializer;
 		return Ninit!=0;
@@ -293,7 +285,6 @@ bit can_coerce(Ptype t1, Ptype t2)
 	Ncoerce holds a coercion function (not constructor), if found
 */
 {
-//error('d',"can_coerce %t<-%t",t1,t2);
 	Ncoerce = 0;
 	if (t2->base == ANY) return 0;
 	switch (t1->base) {
@@ -309,7 +300,6 @@ bit can_coerce(Ptype t1, Ptype t2)
 	//		if (t1->check(t2,COERCE) == 0) return 1;
 		default:	
 		{	Ptype tt2 = t2->addrof();
-//error('d',"t1%t tt2%t =>%d",t1,tt2,t1->check(tt2,COERCE));
 			if (t1->check(tt2,COERCE) == 0) return 1;
 			Ptype tt1 = Pptr(t1)->typ;
 			int i = can_coerce(tt1,t2);
@@ -321,7 +311,6 @@ bit can_coerce(Ptype t1, Ptype t2)
 	Pname c1 = t1->is_cl_obj();
 	Pname c2 = t2->is_cl_obj();
 	int val = 0;
-//error('d',"c1 %s c2 %s",c1?c1->string:"0",c2?c2->string:"0");
 	if (c1) {
 		Pclass cl = (Pclass)c1->tp;
 		if (c2 && c2->tp==cl) return 1;
@@ -334,14 +323,12 @@ bit can_coerce(Ptype t1, Ptype t2)
 		Pname ctor = cl->has_ctor();
 		if (ctor == 0) goto oper_coerce;
 		register Pfct f = (Pfct)ctor->tp;
-//error('d',"f %k",f->base);
 		switch (f->base) {
 		case FCT:
 			switch (f->nargs) {
 			case 1:
 			one:
 			{	Ptype tt = f->argtype->tp;
-//error('d',"one: f->argtype->tp %t t2 %t",tt,t2);
 				if (tt->check(t2,COERCE)==0) val = 1;
 				if (tt->base == RPTR) {
 					Pptr pt = t2->addrof();	// handle derived classed
@@ -369,7 +356,6 @@ bit can_coerce(Ptype t1, Ptype t2)
 				case 1:
 				over_one:
 				{	Ptype tt = ff->argtype->tp;
-//error('d',"over_one: ff->argtype->tp %t t2 %t",tt,t2);
 					if (tt->check(t2,COERCE) == 0) val = 1;
 					if (tt->base == RPTR) {
 						Pptr pt = t2->addrof();	// handle derived classed
@@ -400,11 +386,9 @@ oper_coerce:
 		Pclass cl = (Pclass)c2->tp;
 		int std = 0;
 		for (register Pname on=cl->conv; on; on=on->n_list) {
-//error('d',"oper_coerce%n %t %d",on,(on)?on->tp:0,on);
 			Pfct f = (Pfct)on->tp;
 			Nstd = 0;
 			if (t1->check(f->returns,COERCE) == 0) {
-//error('d',"nstd %d std %d",Nstd,std);
 				if (Nstd==0) {	// forget solutions involving standard conversions
 					if (std) {	// forget
 						val = 1;
@@ -424,7 +408,6 @@ oper_coerce:
 			}
 		}
 	}
-//error('d',"val %d",val);
 	if (val) return val;
 	if (c1 && Pclass(c1->tp)->has_itor()) return 0;
 	if (t1->check(t2,COERCE)) return 0;
@@ -441,13 +424,11 @@ int gen_coerce(Pname n, Pexpr arg)
 	Pfct f = (Pfct) n->tp;
 	register Pexpr e;
 	register Pname nn;
-//error('d',"gen_coerce%n %d",n,arg);
 	for (e=arg, nn=f->argtype; e; e=e->e2, nn=nn->n_list) {
 		if (nn == 0) return f->nargs_known==ELLIPSIS;
 		Pexpr a = e->e1;
 		Ptype at = a->tp;
 		int i = can_coerce(nn->tp,at);
-//error('d',"a1 %k at%t argt%t -> %d",a->base,at,nn->tp,i);
 		if (i != 1) return 0;
 	}
 	if (nn && nn->n_initializer==0) return 0;
@@ -469,7 +450,6 @@ int over_call(Pname n, Pexpr arg)
 	register Plist gl;
 	Pgen g = (Pgen) n->tp;
 	if (arg && arg->base!= ELIST) error('i',"ALX");
-//error('d',"over_call%n base%k arg %d%k", n, g->base, arg, arg?arg->tp->base:0);
 	Nover_coerce = 0;
 	switch (g->base) {
 	default:	error('i',"over_call(%t)\n",g);
@@ -488,9 +468,7 @@ int over_call(Pname n, Pexpr arg)
 		Nover = gl->f;
 		Ninit = 0;
 		Nstd = 0;
-//error('d',"exact? %n",Nover);
 		if (gen_match(Nover,arg) && Ninit==0) {
-//error('d',"%n: nstd %d",Nover,Nstd);
 			if (Nstd == 0) return 2;
 			if (exact)
 				no_exact++;
@@ -501,16 +479,13 @@ int over_call(Pname n, Pexpr arg)
 	}
 
 	if (exact) {
-//error('d',"exact%n %d",exact,no_exact);
 		if (no_exact) error('w',"more than one standard conversion possible for%n",n);
 		Nover = exact;
 		return 2;
 	}
-//error('d',"exact == 0");
 	Nover = 0;
 	for (gl=g->fct_list; gl; gl=gl->l) {		/* look for coercion */
 		Pname nn = gl->f;
-//error('d',"over_call: gen_coerce(%n,%k) %d",nn,arg->e1->base,gen_coerce(nn,arg));
 		if (gen_coerce(nn,arg)) {
 			if (Nover) {
 				Nover_coerce = 2;
@@ -543,7 +518,6 @@ Ptype expr.fct_call(Ptable tbl)
 	int argno;
 	Pexpr etail = 0;
 	Pname no_virt;	// set if explicit qualifier was used: c::f()
-//error('d',"fct_call");
 	switch (base) {
 	case CALL:
 	case G_CALL:	break;
@@ -567,7 +541,6 @@ Ptype expr.fct_call(Ptable tbl)
 		fn = 0;
 		no_virt = 0;
 	};
-//error('d',"fn%n t1%k",fn,t1->base);
 lll:
 	switch (t1->base) {
 	case TYPE:
@@ -594,7 +567,6 @@ lll:
 
 //		for (gl=g->fct_list; gl; gl=gl->l) {	/* look for match */
 //			register Pname nn = gl->f;
-//error('d',"gen_match %s %d",nn->string?nn->string:"?",arg->base);
 //			if (gen_match(nn,arg)) {
 //				found = nn;
 //				goto fnd;
@@ -624,10 +596,8 @@ lll:
 		found = exact;
 		goto fnd;
 	}
-//error('d',"exact == 0");
 		for (gl=g->fct_list; gl; gl=gl->l) {	/* look for coercion */
 			register Pname nn = gl->f;
-//error('d',"gen_coerce %s %d\n",nn->string?nn->string:"?",arg->base);
 			if (gen_coerce(nn,arg)) {
 				if (found) {
 					error("ambiguousA for overloaded%n",fn);
@@ -638,7 +608,6 @@ lll:
 		}
 	
 	fnd:
-//error('d',"found%n",found);
 		if (found) {
 			Pbase b;
 			Ptable tblx;
@@ -647,7 +616,6 @@ lll:
 			fct_name = found;
 
 			/* is fct_name visible? */
-//error('d',"e1 %d%k",e1,e1?e1->base:0);
 			switch (e1->base) {
 			default:
 				if (no_virt) e1 = found;	// instead of using fct_name
@@ -678,7 +646,6 @@ lll:
 
 				if (tblx->lookc(g->string,0) == 0)
 					error('i',"fct_call overload check");
-//error('d',"scope %d epriv %d ebase %d cc %d",found->n_scope,Epriv,Ebase,cc);
 				switch (found->n_scope) {
 				case 0:
 					if (Epriv
@@ -717,7 +684,6 @@ lll:
 	t = f->returns;
 	x = f->nargs;
 	k = f->nargs_known;
-//error('d',"fct_name%n",fct_name);
 
 	if (k == 0) {
 		if (fct_void && fn && x==0 && arg)
@@ -730,14 +696,11 @@ lll:
 
 		if (e) {
 			a = e->e1;
-//error('d',"e %d%k a %d%k e2 %d",e,e->base,a,a->base,e->e2);
 			etail = e;
 
 			if (nn) {	/* type check */
 				Ptype t1 = nn->tp;
-//error('d',"argname %n (%t)",nn,nn->tp);
 			lx:
-/*error('d',"lx: t1%t a->tp%t",t1,a->tp);*/
 				switch (t1->base) {
 				case TYPE:
 					t1 = Pbase(t1)->b_name->tp;
@@ -815,7 +778,6 @@ lll:
 						&& (i=can_coerce(t1,a->tp))
 						&& Ncoerce) {
 							if (1 < i) error("%d possible conversions for%nA%d",i,fn,argno);
-//error('d',"%t<-%t",t1,a->tp);
 							Pclass cl = (Pclass)cn->tp;
 							Pref r = new ref(DOT,a,Ncoerce);
 							Pexpr rr = r->typ(tbl);
@@ -842,12 +804,10 @@ lll:
 		}
 		else {	/* default argument? */
 			a = nn->n_initializer;
-//error('d',"arg missing: %n %d as %d",nn,a,arg_err_suppress);
 			if (a == 0) {
 				if (arg_err_suppress==0) error("A %d ofT%tX for%n",argno,nn->tp,fn);
 				return any_type;
 			}
-//error('d',"%n: perm=%d",nn,a->permanent);
 			a->permanent = 2;	// ought not be necessary, but it is
 			e = new expr(ELIST,a,0);
 			if (etail)
@@ -872,9 +832,7 @@ Pexpr ref_init(Pptr p, Pexpr init, Ptable tbl)
 	Ptype p1 = p->typ;
 	Pname c1;
 	Pexpr a;
-//error('d',"init %d",it->tconst());
 rloop:
-//error('d',"rloop: %d%k",it,it->base);
 	switch (it->base) {
 	case TYPE:
 		it = Pbase(it)->b_name->tp; goto rloop;
@@ -884,7 +842,6 @@ rloop:
 					// but not &char for int&
 			int x = p->check(tt,COERCE);
 			p->base = RPTR;
-//error('d',"p%t tt%t => %d (nstd %d)",p,tt,x,Nstd);
 			if (x == 0) {
 				if (init->lval(0)) return init->address();
 				if (init->base==G_CALL	// &inline function call?
@@ -900,11 +857,9 @@ rloop:
 	c1 = p1->is_cl_obj();
 
 	if (c1) {
-//error('d',"c1%n",c1);
 		refd = 1;	/* disable itor */
 		a = class_init(0,p1,init,tbl);
 		refd = 0;
-//error('d',"a %d init %d",a,init);
 		if (a==init && init->tp!=any_type) goto xxx;
 		switch (a->base) {
 		case G_CALL:
@@ -922,7 +877,6 @@ rloop:
 	}
 
 xxx:
-//error('d',"xxx: %k",init->base);
 	switch (init->base) {
 	case NAME:
 	case DEREF:
@@ -932,7 +886,6 @@ xxx:
 		init->lval(ADDROF);
 		return init->address();
 	case CM:
-/*error('d',"cm%k",init->e2->base);*/
 		switch (init->e2->base) {	/* (a, b) => (a, &b) */
 		case NAME:
 		case DEREF:
@@ -948,14 +901,12 @@ xxx:
 		char* s = make_name('I');
 		Pname n = new class name(s);
 
-//error('d',"ref_init tmp %s n=%d tbl %d init=%d%k",s,n,tbl,init,init->base);
 		if (tbl == gtbl) error('s',"Ir for static reference not an lvaue");		
 		n->tp = p1;
 		n = n->dcl(tbl,ARG); /* no initialization! */
 		n->n_scope = FCT;
 		n->assign();
 		a = n->address();
-//error('d',"tp %t init->tp %t",n->tp,init->tp);
 		Pexpr as = new class expr(ASSIGN,n,init);
 		a = new class expr(CM,as,a);
 		a->tp = a->e2->tp;
@@ -974,7 +925,6 @@ Pexpr class_init(Pexpr nn, Ptype tt, Pexpr init, Ptable tbl)
 {	Pname c1 = tt->is_cl_obj();
 	Pname c2 = init->tp->is_cl_obj();
 
-//error('d',"class_init%n%n%n refd=%d",nn,c1,c2,refd);
 	if (c1) {
 		if (c1!=c2
 		|| (refd==0 && Pclass(c1->tp)->has_itor())) {
@@ -982,7 +932,6 @@ Pexpr class_init(Pexpr nn, Ptype tt, Pexpr init, Ptable tbl)
 				but ref_init can do that
 			*/
 			int i = can_coerce(tt,init->tp);
-//error('d',"i %d Ncoerce %d",i,Ncoerce);
 			switch (i) {
 			default:
 				error("%d ways of making a%n from a%t",i,c1,init->tp);
@@ -1046,7 +995,6 @@ Pexpr class_init(Pexpr nn, Ptype tt, Pexpr init, Ptable tbl)
 					error('w',"bitwise copy: %s has assignment and destructor but not %s(%s&)",cl->string,cl->string,cl->string);
 			}
 		}
-//error('d',"class_init%n: init %d %d:%t",nn,init->tp,init->tp->base,init->tp);
 		return init;
 	}
 
@@ -1342,10 +1290,8 @@ bit classdef.has_friend(Pname f)
 {
 	Plist l;
 	Ptable ctbl = f->n_table;
-/*fprintf(stderr,"(%d %s)->has_friend(%d %s)\n",this,string,f,(f)?f->string:""); fflush(stderr);*/
 	for (l=friend_list; l; l=l->l) {
 		Pname fr = l->f;
-/*fprintf(stderr,"fr %d %d %d\n",fr,fr->tp,fr->tp->base); fflush(stderr);*/
 		switch (fr->tp->base) {
 		case CLASS:
 			if (Pclass(fr->tp)->memtbl == ctbl) return 1;

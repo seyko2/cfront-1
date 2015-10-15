@@ -171,7 +171,6 @@ re_allocate:
 		{
 			int ll = strlen(s)+1;
 			char *ps = new char[ll];
-/*fprintf(stderr,"tbl.cpy %s sz=%d %d->%d\n", s, ll, s, ps); fflush(stderr);*/
 			strcpy(ps,s);	/*	copy string to safer store */
 			Nstr++;
 			nw->string = ps;
@@ -195,7 +194,6 @@ void table.grow(int g)
 
 	if (g <= free_slot) error('i',"table.grow(%d,%d)",g,free_slot);
 	if (g <= size) return;
-/* fprintf(stderr,"tbl.grow %d %s %d->%d\n", this, (t_name)?t_name->string:"?", size, g+1); fflush(stderr); */
 	size = mx = g+1;
 
 	np = new Pname[mx];

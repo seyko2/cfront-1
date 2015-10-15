@@ -188,7 +188,6 @@ char en = 0;
 
 	{	TOK t = lookahead();
 		TOK x;
-//error('d',"aggr %k %d in_enum %d",t,t, en);
 		switch (t) {
 		case TNAME:
 			x = lookahead();
@@ -196,7 +195,6 @@ char en = 0;
 		case ID:			// hidden or undefined
 			x = lookahead();
 			backup();
-//error('d',"after id %k %d",x,x);
 			switch (x) {
 			case LC:
 				in_enum = en;
@@ -234,7 +232,6 @@ char en = 0;
 			DO_RET;
 		};
 		
-//error('d',"next %k %d tk %k",x,x,tk);
 		switch (x) {
 		case LC:		// class x {
 			in_enum = en; 
@@ -257,7 +254,6 @@ char en = 0;
 	}
 
 	case LP:
-//error('d',"nocast %d in_op %d incast %d",nocast,in_op,incast);
 		fr = 0;
 		if (nocast) {
 			nocast = 0;
@@ -313,7 +309,6 @@ char en = 0;
 		DO_RET;
 	case ID:
 	{	char* s = front->retval.s;
-//error('d',"id: %s",front->retval.s);
 		fr = 0;
 		nocast = 1;
 		switch (lookahead()) {
@@ -403,7 +398,6 @@ char en = 0;
 			return tk=SM;
 		}
 	case TYPE:	// dangerous to diddle with: constructor notation
-//fprintf(stderr,"type %d\n",tk); fflush(stderr);
 		fr = 0;
 		switch (tk) {
 		case ID:
@@ -478,7 +472,6 @@ char en = 0;
 		DO_RET;
 */
 	case RC:
-//error('d',"} tk %d in_enum %d",tk,in_enum);
 		fr = 0;
 		switch (tk) {
 		case RC:	// nested } (either stmt or expr)
@@ -522,7 +515,6 @@ ret:
 	yylval = T->retval;
 	if (front = front->next) front->last = 0;
 	delete T;
-//fprintf(stderr,"-> %d %d\n",tk,yylval);
 	return tk;
 //}
 

@@ -78,7 +78,6 @@ Pname gen.add(Pname n,int sig)
 	if (f->base != FCT) error(0,"%n: overloaded non-F",n);
 
 	if ( fct_list && (nx=find(f)) ) {
-//error('d',"add old %n",nx);
 /*
 		Pfct nf = (Pfct)nx->tp;
 
@@ -94,7 +93,6 @@ Pname gen.add(Pname n,int sig)
 	}
 	else {
 		char* s = string;
-//error('d',"add new %s",s);
 
 		if (fct_list || sig || n->n_oper) {
 			char buf[128];
@@ -135,13 +133,11 @@ Pname gen.find(Pfct f)
 		Pname a, ax;
 		int vp = 0;
 
-//error('d',"find %s",nx->string);
 
 		if (fx->nargs_known != f->nargs_known) {
 			if (fx->nargs && fx->nargs_known!=ELLIPSIS) continue;
 		}
 		for (ax=fx->argtype, a=f->argtype; a&&ax; ax=ax->n_list, a=a->n_list) {
-//error('d',"ax %d %d a %d %d",ax->tp,ax->tp->base,a->tp,a->tp->base);
 			Ptype at = ax->tp;
 			if ( at->check(a->tp,0)) goto xx;
 			if ( vrp_equiv ) vp = 1;
@@ -248,7 +244,6 @@ void classdef.dcl(Pname cname, Ptable tbl)
 	cc->stack();
 	cc->not = cname;
 	cc->cot = this;
-//error('d',"classdef%n",cname);
 	byte_offset = usz = boff;
 	bit_offset = 0;
 
@@ -261,7 +256,6 @@ void classdef.dcl(Pname cname, Ptable tbl)
 	for (p=privmem; p; p=px) {
 		Pname m;
 		px = p->n_list;
-//error('d',"privmem%n %d",p,p->tp->base);
 		if (p->tp->base==FCT) {
 			Pfct f = (Pfct)p->tp;
 			Pblock b = f->body;
@@ -305,7 +299,6 @@ void classdef.dcl(Pname cname, Ptable tbl)
 	for (p=pubmem; p; p=px) {
 		Pname m;
 		px = p->n_list;
-//error('d',"pubmem%n %d",p,p->tp->base);
 		if (p->tp->base == FCT) {
 			Pfct f = (Pfct)p->tp;
 			Pblock b = f->body;
@@ -406,7 +399,6 @@ for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
 		}
 		else {
 		vvv:
-/*error('d',"vvv: %n f_virtual %d virt_count %d",nn,f->f_virtual,virt_count);*/
 			if (f->f_virtual)  {
 				f->f_virtual = ++virt_count;
 				switch (f->f_virtual) {
@@ -427,13 +419,11 @@ for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
 	case OVERLOAD:
 	{	Plist gl;
 		Pgen g = (Pgen)nn->tp;
-/*error('d',"overload%n bvirt==%d",nn,bvirt);*/
 		if (bvirt) {
 			Pname vn = btbl->look(nn->string,0);
 			Pgen g2;
 			Pfct f2;
 			if (vn) {
-/*error('d',"vn%n tp%k",vn,vn->tp->base);*/
 				if (vn->n_table == gtbl) goto ovvv;
 				switch (vn->tp->base) {
 				default:
@@ -475,7 +465,6 @@ for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
 				Pname fn = gl->f;
 				Pfct f = (Pfct)fn->tp;
 
-/*fprintf(stderr,"fn %s f %d %d %d count %d\n",fn->string,f,f->base,f->f_virtual,virt_count+1);*/
 				if (f->f_virtual) {
 					f->f_virtual = ++virt_count;
 					switch (f->f_virtual) {
@@ -507,7 +496,6 @@ for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
 		Ptable ctbl;
 		Pname mx;
 		pnx = p->n_list;
-//error('d',"dcl: pubdef %s::%s",qs,ms);
 		if (strcmp(ms,qs)==0) ms = "_ctor";
 
 		for (cx = clbase; cx; cx = Pclass(cx->tp)->clbase) {
@@ -518,7 +506,6 @@ for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
 	ok:
 		ctbl = Pclass(cx->tp)->memtbl;
 		mx = ctbl->lookc(ms,0);
-//error('d',"ms %d %d %d",mx,Ebase,Epriv);
 		if (Ebase) {	// cc->nof ??
 			if (!Ebase->has_friend(cc->nof)) error("QdMN%n is in privateBC",p);
 		}
@@ -537,18 +524,15 @@ for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
 		
 		p->n_qualifier = mx;
 		(void) memtbl->insert(p,0);
-//error('d',"bbb");
 		if (Nold) error("twoDs of CM%n",p);
 	}
 	pubdef = 0;
 
 	if (bit_offset) byte_offset += (bit_offset/BI_IN_BYTE+1);
 	real_size = byte_offset;
-//error('d',"%s: rz=%d (bits %d)",string,byte_offset,bit_offset);
 	if (byte_offset < SZ_STRUCT) byte_offset = SZ_STRUCT;
 	int waste = byte_offset%max_align;
 	if (waste) byte_offset += max_align-waste;
-//error('d',"%s: sz=%d al=%d",string,byte_offset,max_align);
 	obj_size = byte_offset;
 	obj_align = max_align;
 	
@@ -652,7 +636,6 @@ for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
 
 	for (p=memtbl->get_mem(i=1); p; p=memtbl->get_mem(++i)) {
 	/* define members defined inline */
-//error('d',"member %n",p);
 		switch (p->tp->base) {
 		case FCT:
 		{	Pfct f = (Pfct)p->tp;
@@ -810,7 +793,6 @@ bit arg_err_suppress;
 
 Pexpr check_cond(Pexpr e, TOK b, Ptable tbl)
 {
-//error('d',"check_cond(%k %k) tbl %d",e->base,b,tbl);
 	Pname cn;
 	if (cn = e->tp->is_cl_obj()) {	
 		Pclass cl = (Pclass)cn->tp;
@@ -842,7 +824,6 @@ Pexpr check_cond(Pexpr e, TOK b, Ptable tbl)
 			return e;
 		case 1:
 		{
-//error('d',"cond%t<-%t:%n",Pfct(found->tp)->returns,e->tp,found);
 			Pclass cl = (Pclass)cn->tp;
 			Pref r = new ref(DOT,e,found);
 			r->tp = found->tp;
@@ -875,7 +856,6 @@ void stmt.dcl()
 		Pstmt old_loop, old_switch;
 		Cstmt = ss;
 		Ptable tbl = curr_block->memtbl;
-/*error('d',"ss %d%k tbl %d e %d%k s %d%k sl %d%k", ss, ss->base, tbl, ss->e, (ss->e)?ss->e->base:0, ss->s, (ss->s)?ss->s->base:0, ss->s_list, (ss->s_list)?ss->s_list->base:0);*/
 		switch (ss->base) {
 		case BREAK:
 			if (curr_loop==0 && curr_switch==0)
@@ -948,7 +928,6 @@ void stmt.dcl()
 				else {
 					v = v->typ(tbl);
 				lx:
-//error('d',"return %t",rt);
 					switch (rt->base) {
 					case TYPE:
 						rt = Pbase(rt)->b_name->tp;
@@ -967,7 +946,6 @@ void stmt.dcl()
 					case COBJ:
 					{	Pname rv = tbl->look("_result",0);
 						ss->e = class_init(rv,rt,v,tbl);
-//error('d',"ss->e %t %d",ss->e->tp,ss->e->base);
 						break;
 					}
 					case ANY:
@@ -1178,14 +1156,12 @@ void stmt.dcl()
 					error('w',"constant assignment in condition");
 			}
 			ss->e = ee = check_cond(ee,IF,tbl);
-//error('d',"if (%t)",ee->tp);
 			switch (ee->tp->base) {
 			case INT:
 			case ZTYPE:
 			{	int i;
 				Neval = 0;
 				i = ee->eval();
-//error('d',"if (int:%k) => (i %s)",ss->e->base,i,Neval?Neval:"0");
 				if (Neval == 0) {
 					Pstmt sl = ss->s_list;
 					if (i) {
@@ -1231,7 +1207,6 @@ void stmt.dcl()
 					break;
 				case DCL:
 					fi->dcl();
-//error('d',"dcl=>%k %d",fi->base,fi->base);
 					switch (fi->base) {
 					case BLOCK:
 					{
@@ -1279,7 +1254,6 @@ void stmt.dcl()
 				//	find tail;
 				//	detect non-trivial declarations
 				count++;
-//error('d',"dcl:%n list %d stc %d in %d",nn,nn->n_list,nn->n_sto,nn->n_initializer);
 				if (nn->n_list) tail = nn->n_list;
 				Pname n = tbl->look(nn->string,0);
 				if (n && n->n_table==tbl) non_trivial = 2;
@@ -1304,7 +1278,6 @@ void stmt.dcl()
 				if (Pclass(cln->tp)->has_dtor()) non_trivial = 2;
 				if (Pclass(cln->tp)->has_ctor()) non_trivial = 2;
 			}
-//error('d',"non_trivial %d",non_trivial);
 			while( ss->s_list && ss->s_list->base==DCL ) {
 				Pstmt sx = ss->s_list;
 				tail = tail->n_list = sx->d;	// add to tail
@@ -1339,7 +1312,6 @@ void stmt.dcl()
 			/*	delete sx;	*/
 			}
 			Pstmt next_st = ss->s_list;
-//error('d',"non_trivial %d curr_block->own_tbl %d inline_restr %d",non_trivial,curr_block->own_tbl,inline_restr);
 			if (non_trivial==2	/* must */
 			|| (non_trivial==1	/* might */
 				&& ( curr_block->own_tbl==0	/* just as well */
@@ -1387,7 +1359,6 @@ void stmt.dcl()
 				Pstmt sss = ss;
 				for( nn=ss->d; nn; nn=nn->n_list ) {
 					Pname n = nn->dcl(tbl,FCT);
-//error('d',"%n->dcl(%d) -> %d init %d sss=%d ss=%d",nn,tbl,n,n->n_initializer,sss,ss);
 					if (n == 0) continue;
 					Pexpr in = n->n_initializer;
 					n->n_initializer = 0;
@@ -1619,7 +1590,6 @@ void list_check(Pname nn, Ptype t, Pexpr il)
 	bit lst = 0;
 	int i;
 	Pclass cl;
-//error('d',"list_check%n: %t (%d)",nn,t,il);
 	switch ( (int)il ) {
 	case 0:		break;
 	case 1:		lst = 1; break;
@@ -1652,7 +1622,6 @@ zzz:
 				e = next_elem();
 				if (e == 0) goto xsw; // too few initializers are ok
 			vtz:
-//error('d',"vtz: %d",vt->base);
 				switch (vt->base) {
 				case TYPE:
 					vt = Pbase(vt)->b_name->tp;
@@ -1679,7 +1648,6 @@ zzz:
 			while ( e=next_elem() ) {	// get another initializer
 				i++;
 			vtzz:
-//error('d',"vtzz: %d",vt->base);
 				switch (vt->base) {
 				case TYPE:
 					vt = Pbase(vt)->b_name->tp;
@@ -1729,7 +1697,6 @@ zzz:
 			e = next_elem();
 			if (e == 0) return; //break;
 		mtz:
-//error('d',"mtz%n: %d",m,mt->base);
 			switch (mt->base) {
 			case TYPE:
 				mt = Pbase(mt)->b_name->tp;

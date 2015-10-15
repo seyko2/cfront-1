@@ -19,7 +19,6 @@ del.c:
 
 void name.del()
 {
-/*fprintf(stderr,"%d->name.del: %s %d\n",this,(string)?string:"?",base);fflush(stderr);*/
 	Pexpr i = n_initializer;
 
 	NFn++;
@@ -31,7 +30,6 @@ void name.del()
 
 void type.del()
 {
-//fprintf(stderr,"DEL(type=%d %d)\n",this,base);
 	permanent = 3;	/* do not delete twice */
 	switch (base) {
 	case TNAME:
@@ -75,7 +73,6 @@ void type.del()
 
 void expr.del()
 {
-//fprintf(stderr,"DEL(expr=%d: %d %d %d)\n",this,base,e1,e2); fflush(stderr);
 	permanent = 3;
 	switch (base) {
 	case IVAL:
@@ -122,7 +119,6 @@ dd:
 
 void stmt.del()
 {
-//fprintf(stderr,"DEL(stmt %d %s)\n",this,keys[base]); fflush(stderr);
 	permanent = 3;
 	switch (base) {
 	case SM:
@@ -164,7 +160,6 @@ dd:
 void table.del()
 {
 	register i;
-/*fprintf(stderr,"tbl.del %s %d size=%d used=%d)\n", (t_name)?t_name->string:"?", this, size, free_slot-1); fflush(stderr);*/
 
 	for (i=1; i<free_slot; i++) {
 		Pname n = entries[i];

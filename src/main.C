@@ -232,7 +232,6 @@ void run()
 	Pname m;
 	if (fct_void == 0)
 	for (m=gtbl->get_mem(i=1); m; m=gtbl->get_mem(++i)) {
-/*error('d',"global:%k n_key%k perm %d %n", m->base, m->n_key, m->permanent, m );*/
 		if (m->base==TNAME
 		|| m->n_sto==EXTERN
 		|| m->n_stclass == ENUM) continue;
@@ -322,7 +321,6 @@ void run()
 				f = (Pfct)n->tp;
 			}
 
-/*fprintf(stderr,"%s() tp (%d %d) %d %d\n", n->string, n->tp, n->tp?n->tp->base:0, n->n_addr_taken, f->f_virtual); fflush(stderr);*/
 			if (n->n_addr_taken || f->f_virtual)  {
 				outlined = Pfct(n->tp)->s_returns?Pfct(n->tp)->s_returns:Pfct(n->tp)->returns;
 				n->tp->dcl_print(n);

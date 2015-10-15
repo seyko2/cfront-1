@@ -177,7 +177,6 @@ int type.align()
 {
 	Ptype t = this;
 xx:
-/*fprintf(stderr,"align %d %d\n",t,t->base);*/
 	switch (t->base) {
 	case TYPE:	t = Pbase(t)->b_name->tp; goto xx;
 	case COBJ:	t = Pbase(t)->b_name->tp; goto xx;
@@ -211,7 +210,6 @@ zx:
 	switch (t->base) {
 	case TYPE: 
 	case COBJ:
-/*fprintf(stderr,"tsizeof %d %d %s%s\n",t,t->base,((Pbase)t)->b_name->string,(t->permanent)?" PERM":"");fflush(stderr);*/
 		t = ((Pbase)t)->b_name->tp; goto zx;
 	case ANY:	return 1;
 	case VOID:	return 0;

@@ -319,14 +319,12 @@ bit type.check(Ptype t,TOK oper)
 	TOK b1, b2;
 	bit first = 1;
 	TOK r;
-//error('d',"check (%d: %t) (%d: %t)",t1,t1,t2,t2);
 	if (t1==0 || t2==0) error('i',"check(%d,%d,%d)",t1,t2,oper);
 
 	vrp_equiv = 0;
 
 	while (t1 && t2) {
 	top:
-//error('d',"top: %t (%d) %t (%d)",t1,t1->base,t2,t2->base);
 		if (t1 == t2) return 0;
 		if (t1->base == ANY || t2->base == ANY) return 0;
 
@@ -428,7 +426,6 @@ bit type.check(Ptype t,TOK oper)
 			TOK k2 = f2->nargs_known;
 			int n1 = f1->nargs;
 			int n2 = f2->nargs;
-//error('d',"k %d %d n %d %d body %d %d",k1,k2,n1,n2,f1->body,f2->body);
 			if ( (k1 && k2==0) || (k2 && k1==0) ){
 				if (f2->body == 0) return 1;
 			}
@@ -532,7 +529,6 @@ cla_check:
 		Pbase c2 = (Pbase)t2;
 		Pname n1 = c1->b_name;
 		Pname n2 = c2->b_name;
-//error('d',"c1 %d c2 %d n1 %d %s n2 %d %s oper %d first %d",c1,c2,n1,n1->string,n2,n2->string,oper,first);
 		if (n1 == n2) goto const_check;
 if (first) return 1;
 		switch (oper) {
@@ -564,7 +560,6 @@ if (first) return 1;
 	goto const_check;
 
 base_check:
-/*error('d',"base_check t1=%t t2=%t oper=%d",t1,t2,oper);*/
 	if (oper)
 	if (first) {
 		if (b1==VOID || b2==VOID) return 1;

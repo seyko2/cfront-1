@@ -53,7 +53,6 @@ Pname dcl_local(Ptable scope, Pname an, Pname fn)
 	Pname cn = fn->n_table->t_name;
 	char* s = temp(an->string,fn->string,(cn)?cn->string:0);
 	Pname nx = new name(s);
-/*error('d',"%n: %d->dcl_local(%s)",fn,scope,s); */
 	nx->tp = an->tp;
 	PERM(nx->tp);
 	nx->n_used = an->n_used;
@@ -74,7 +73,6 @@ Pstmt stmt.expand()
 */
 {
 	if (this == 0) error('i',"0->stmt.expand() for%n",expand_fn);
-/*error('d',"stmt %d:%k s=%d e=%d l=%d",this,base,s,e,s_list);*/
 
 	if (memtbl) {	/* check for static variables */
 		register Ptable t = memtbl;
@@ -95,7 +93,6 @@ Pstmt stmt.expand()
 			Pname n;
 			Ptable tbl = memtbl;
 			for (n = tbl->get_mem(i=1); n; n=tbl->get_mem(++i)) {
-/*error('d',"%n: %n",expand_fn,n);*/
 				Pname nn = dcl_local(scope,n,expand_fn);
 				nn->base = NAME;
 				n->string = nn->string;
@@ -185,7 +182,6 @@ Pstmt stmt.expand()
 Pexpr expr.expand()
 {
 	if (this == 0) error('i',"expr.expand(0)");
-/*fprintf(stderr,"%s(): expr %d: b=%d e1=%d e2=%d\n",expand_fn->string,this,base,e1,e2); fflush(stderr);*/
 	switch (base) {
 	case NAME:
 		if (expand_tbl && ((Pname)this)->n_scope==FCT) {
@@ -245,7 +241,6 @@ bit expr.not_simple()
 */
 {
 	int s;
-/*error('d',"not_simple%k",base);*/
 	switch (base) {
 	default:
 		return 2;
@@ -348,7 +343,6 @@ Pexpr fct.expand(Pname fn, Ptable scope, Pexpr ll)
 	(3) link to body
 */
 {
-//error('d',"expand%n inline=%d body %d defined %d f_expr %d last_exp=%d curr_expr=%d",fn,f_inline,body,defined ,f_expr,last_expanded,curr_expr);
 	if ((body==0 && f_expr==0)			// before defined
 	||  ((defined&SIMPLIFIED)==0)			// before simplified
 	||  (Pfct(fn->tp)->body->memtbl==scope)		// while defining
@@ -397,7 +391,6 @@ Pexpr fct.expand(Pname fn, Ptable scope, Pexpr ll)
 
 		int s;	/* could be avoided when expanding into a block */
 
-//error('d',"n=%n addr %d ass %d used %d ee %k => %d",n,n->n_addr_taken,n->n_assigned_to,n->n_used,ee->base,ee->not_simple());
 		if (n->n_assigned_to == FUDGE111) {	/* constructor's this */
 			if (ee!=zero && ee->not_simple()==0) {		/* automatic or static
 							   then we can use the
@@ -434,9 +427,7 @@ Pexpr fct.expand(Pname fn, Ptable scope, Pexpr ll)
 	if (f_expr) {	/* generate comma expression */
 		char loc_var = 0;
 		/* look for local variables needing declaration: */
-//error('d',"fn%n tbl %d",fn,tbl);
 		for (n=tbl->get_mem(i=1); n; n=tbl->get_mem(++i) ) {
-//error('d',"?%s: b=%d u%d =%d &=%d",n->string,n->base,n->n_used,n->n_assigned_to,n->n_addr_taken);
 			if (n->base==NAME
 			&& (n->n_used||n->n_assigned_to||n->n_addr_taken)) {
 				Pname nn = dcl_local(scope,n,fn);
@@ -445,7 +436,6 @@ Pexpr fct.expand(Pname fn, Ptable scope, Pexpr ll)
 				loc_var++;
 			}
 		}
-/*error('d',"not_simple=%d loc_var=%d last_expanded=%d curr_expr=%d",not_simple,loc_var,last_expanded,curr_expr);*/
 		if (not_simple || loc_var) last_expanded = curr_expr;
 
 		Pexpr ex;
@@ -456,7 +446,6 @@ Pexpr fct.expand(Pname fn, Ptable scope, Pexpr ll)
 				if (n==0) continue;
 				Pexpr e = il->arg[i];
 				etail->e1 = new expr(ASSIGN,n,e);
-/*error('d',"%n = %k",n,e->base);*/
 				if (--not_simple)
 					etail = etail->e2 = new expr(CM,0,0);
 				else
@@ -472,7 +461,6 @@ Pexpr fct.expand(Pname fn, Ptable scope, Pexpr ll)
 	else {	/* generate block: */
 		for (n=tbl->get_mem(i=1); n; n=tbl->get_mem(++i) ) {
 			// mangle local names
-//error('d',"?%s: b=%d u%d =%d &=%d",n->string,n->base,n->n_used,n->n_assigned_to,n->n_addr_taken);
 			if (n->base==NAME
 			&& (n->n_used||n->n_assigned_to||n->n_addr_taken)) {
 				Pname cn = fn->n_table->t_name;

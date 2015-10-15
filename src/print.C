@@ -313,7 +313,6 @@ void name.dcl_print(TOK list)
 		default:
 		{	Pexpr i = n->n_initializer;
 			if (n->base == TNAME) puttok(TYPEDEF);
-//error('d',"%s: init %d %d tbl %d %d sto %d sc %d scope %d\n",n->string?n->string:"",i,i?i->base:0,n->n_table,gtbl,n->n_sto,n->n_stclass,n->n_scope);
 			if (i) {
 				if (n->n_sto==EXTERN && n->n_stclass==STATIC) {
 					n->n_initializer = 0;
@@ -356,7 +355,6 @@ void name.dcl_print(TOK list)
 					&& i->base!=ILIST /*&& i->tp!=Pchar_type*/) {
 						Ptype t1 = n->tp;
 					cmp:
-//error('d',"t1%t",t1);
 						switch (t1->base) {
 						default:
 							i->print();
@@ -449,7 +447,6 @@ void name.print()
 			default:
 				if (tbl=n_table) {
 					Pname tn;
-//fprintf(stderr,"%s: tbl %d gtbl %d\n",string,tbl,gtbl);
 					if (tbl == gtbl) break;
 					if (tn=tbl->t_name) {
 						if (i)
@@ -459,7 +456,6 @@ void name.print()
 						break;
 					}
 				}
-//fprintf(stderr,"%s: stc %d\n",string,n_stclass);
 				switch (n_stclass) {
 				case STATIC:
 				case EXTERN:
@@ -560,7 +556,6 @@ void name.print()
 
 void type.print()
 {
-/*fprintf(stderr,"type %d %d\n",this,base); fflush(stderr);*/
 	switch (base) {
 	case PTR:
 	case RPTR:
@@ -853,7 +848,6 @@ void fct.dcl_print()
 	}
 
 	Pname at = (f_this) ? f_this : argtype;
-//fprintf(stderr,"f_this %d argtype %d body %d\n",f_this,argtype,body); fflush(stderr);
 	puttok(LP);
 	if (body && Cast==0) {
 
@@ -894,7 +888,6 @@ void classdef.print_members()
 		bcl->print_members();
 	}
 	for (nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i)) {
-//error('d',"mem %n: base(%d %d) union=%d tp=%d stc(%d %k)",nn,nn->base,nn->base,nn->n_union,nn->tp->base,nn->n_stclass,nn->n_stclass);
 		if (nn->base==NAME
 		&& nn->n_union==0
 		&& nn->tp->base!=FCT
@@ -922,7 +915,6 @@ void classdef.dcl_print(Pname)
 		Pname nn;
 
 		for ( nn=memtbl->get_mem(i=1); nn; nn=memtbl->get_mem(++i) ) {
-/*fprintf(stderr, "mem %d %s %d union %d tp %d %d\n", nn, nn->string, nn->base, nn->n_union, nn->tp, nn->tp->base);*/
 			if (nn->base==NAME && nn->n_union==0) {
 				if (nn->tp->base == CLASS) Pclass(nn->tp)->dcl_print(nn);
 			}
@@ -959,7 +951,6 @@ void classdef.dcl_print(Pname)
 					switch (t->base) {
 					case FCT:
 					{	Pfct f =(Pfct) t;
-//error('d',"%n i==%d v==%d returns (%d %d)%t",nn,f->f_inline,f->f_virtual,f->s_returns,f->returns,f->s_returns?f->s_returns:f->returns);
 						if (f->f_virtual == 0) break;
 						if (f->f_inline) puttok(STATIC);
 						f->returns->print();
@@ -1032,7 +1023,6 @@ void classdef.dcl_print(Pname)
 
 		for (l=friend_list; l; l=l->l) {
 			Pname nn = l->f;
-//error('d',"friend%n %d%k",nn,nn->tp,nn->tp->base);
 			switch (nn->tp->base) {
 			case FCT:
 				putst("/* friend */");
@@ -1108,7 +1098,6 @@ void expr.print()
 {
 	if (this == 0) error('i',"0->expr.print()");
 	if (this==e1 || this==e2) error('i',"(%d%k)->expr.print(%d %d)",this,base,e1,e2);
-/*error('d',"expr %d%k e1=%d e2=%d tp2=%d",this,base,e1,e2,tp2);*/
 	switch (base) {
 	case NAME:
 	{	Pname n = (Pname) this;
@@ -1139,14 +1128,12 @@ void expr.print()
 			goto bok;
 		aok:
 			if (n = il->local[argno]) {
-//error('d',"n   %d %s",n,n->string);
 				n->print();
 			}
 			else {
 				Pexpr ee = il->arg[argno];
 				Ptype t = il->tp[argno];
 				if (ee==0 || ee==this) error('i',"%d->expr.print(A %d)",this,ee);
-//error('d',"ee  %d %d",ee,ee->base);
 				if (t!=ee->tp && t->is_cl_obj()==0 && eobj==0) {
 					puttok(LP);
 					puttok(LP);
@@ -1165,7 +1152,6 @@ void expr.print()
 		}
 		else {
 		bok:	/* in body: print it: */
-//error('d',"bok %d %d",this,base);
 			Pname(this)->print();
 		}
 		break;
@@ -1199,7 +1185,6 @@ void expr.print()
 			}
 		}
 		if (val==QUEST) goto dumb;
-//error('d',"%n's this == %d",il->fct_name,val);
 		/*
 			now find the test:  "(this==0) ? _new(sizeof(X)) : 0"
 
@@ -1240,11 +1225,9 @@ void expr.print()
 		}
 	}
 	dumb:
-//error('d',"dumb%n",il->fct_name);
 		eprint(e1);
 		if (e2) Pstmt(e2)->print();
 		curr_icall = il->i_next;
-//error('d',"end%n",il->fct_name);
 		break;
 	}
 	case REF:
@@ -1345,7 +1328,6 @@ void expr.print()
 		Pname at;
 		if (fn && print_mode==SIMPL) {
 			Pfct f = (Pfct)fn->tp;
-//error('d',"call%n: %t",fn,f);
 			if (f->base==OVERLOAD) { /* overloaded after call */
 				Pgen g = (Pgen)f;
 				fct_name = fn = g->fct_list->f;
@@ -1355,7 +1337,6 @@ void expr.print()
 			at = (f->f_this) ? f->f_this : f->argtype;
 		}
 		else {
-//error('d',"e1%k e1->tp %d %d%t",e1->base,e1->tp,e1->tp->base,e1->tp);
 			eprint(e1);
 			if (e1->tp) {	/* pointer to fct */
 				at = Pfct(e1->tp)->argtype;
@@ -1527,7 +1508,6 @@ else
 			}
 			puttok(CM);
 		le2:
-//error('d',"le2 %k(%k,%k) addrof_cm %d",base,e1->base,e2->base,addrof_cm);
 			if (addrof_cm) {
 				switch (e2->base) {
 				case CAST:
@@ -1578,7 +1558,6 @@ else
 		break;
 	case ADDROF:
 	case G_ADDROF:
-//error('d',"&%k",e2->base);
 		switch (e2->base) {
 		case DEREF:
 			if (e2->e2 == 0) {
@@ -1642,7 +1621,6 @@ Pexpr aval(Pname a)
 	return 0;
 aok:
 	Pexpr aa = il->arg[argno];
-/*error('d',"aval(%n) -> %k",a,aa->base);*/
 ll:
 	switch (aa->base) {
 	case CAST:	aa = aa->e1; goto ll;
@@ -1659,7 +1637,6 @@ void stmt.print()
 		forced_sm = 0;
 		where.putline();
 	}
-/*error('d',&where,"stmt.print %d:%k s %d s_list %d",this,base,s,s_list);*/
 
 	if (memtbl && base!=BLOCK) { /* also print declarations of temporaries */
 		puttok(LC);
@@ -1678,7 +1655,6 @@ void stmt.print()
 			Pname cn;
 			if (bl && (cn=n->tp->is_cl_obj()) && Pclass(cn->tp)->has_dtor()) bl = 0;
 		}
-/*error('d',"%d (tbl=%d) list %d",this,tbl,s_list);*/
 		if (bl) {
 			Pstmt sl = s_list;
 			s_list = 0;
@@ -1747,7 +1723,6 @@ void stmt.print()
 				// it has been simplified as an inline, that is
 				// ignoring _return;
 			if (e && e!=dummy) {
-//error('d',"outlined %t %t => %d",outlined,e->tp,outlined != e->tp);
 				if (outlined != e->tp) {
 					switch (outlined->base) {
 					case RPTR:
@@ -1785,7 +1760,6 @@ void stmt.print()
 		if (e->base == ANAME) {
 			Pname a = (Pname)e;
 			Pexpr arg = aval(a);
-//error('d',"arg %d%k %d (%d)",arg,arg?arg->base:0,arg?arg->base:0,arg?arg->e1:0);
 			if (arg)
 				switch (arg->base) {
 				case ZERO:	val = 0; break;
@@ -1794,7 +1768,6 @@ void stmt.print()
 				case IVAL:	val = int(arg->e1)!=0;
 			}
 		}
-//error('d',"val %d",val);
 		switch (val) {
 		case 1:
 			s->print();
@@ -1830,7 +1803,6 @@ void stmt.print()
 	}
 	case FOR:
 	{	int fi = for_init && (for_init->base!=SM || for_init->memtbl || for_init->s_list);
-//error('d',"fi %d for_init %d base %d tbl %d slist %d",fi,for_init,for_init->base,for_init->memtbl,for_init->s_list);
 		if (fi) {
 			puttok(LC);
 			for_init->print();

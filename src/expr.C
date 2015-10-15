@@ -61,7 +61,6 @@ Pexpr table.find_name(register Pname n, bit f, Pexpr/* args*/)
 
 	if (q) {
 		Ptable tbl;
-//error('d',"qq %n %n",q,n);
 		if (q == sta_name)
 			tbl = gtbl;
 		else {
@@ -84,7 +83,6 @@ Pexpr table.find_name(register Pname n, bit f, Pexpr/* args*/)
 		}
 
 		qn = tbl->look(n->string,0);
-//error('d',"qn == %d",qn);
 		if (qn == 0) {
 			n->n_qualifier = 0;
 			nn = 0;
@@ -104,7 +102,6 @@ nq:
 	{	for (Ptable tbl = this;;) {	// loop necessary to get past
 						// local re-definitions
 			nn = tbl->lookc(n->string,0);
-//error('d',"cc->tot:%n nn=%n sto%k sco%k tbl=%d",n,nn,nn->n_stclass,nn->n_scope,tbl);
 			if (nn == 0) goto qq;	/* try for friend */
 
 			switch (nn->n_scope) {
@@ -149,7 +146,6 @@ nq:
 		}
 	}
 	xx:
-//error('d',"xx: nn=%n qn=%n n=%n f=%d",nn,qn,n,f);
 		if (nn == 0) goto def;
 		nn->use();
 		if (f == 2) {
@@ -173,7 +169,6 @@ nq:
 		switch (nn->n_scope) {
 		case 0:
 		case PUBLIC:
-//error('d',"st %d th %d",nn->n_stclass,cc->c_this);
 			if (nn->n_stclass == 0) {
 				if (qn)	{	/* suppress virtual */
 					switch (qn->tp->base) {
@@ -211,7 +206,6 @@ nq:
 		}
 	}
 qq:
-//error('d',"qq: n%n qn%d",n,qn);
 	if (qn) {
 		// check for p->base::mem :
 			// nasty where derived::mem is public
@@ -261,7 +255,6 @@ qq:
 	}
 
 	if (nn) {
-//error('d',"found %n",nn);
 		if (f==2 && nn->n_table==gtbl) error("MF%n not found",n);
 		nn->use();
 		if (n) delete n;
@@ -269,7 +262,6 @@ qq:
 	}
 
 def:	/* implicit declaration */
-//error('d',"implicit f %d",f);
 	n->n_qualifier = 0;
 	if (f == 1) {	/* function */
 		if (n->tp) error('i',"find_name(fct_type?)");
@@ -355,11 +347,9 @@ if (this == 0) error('i',"0->expr.typ");
 	if (tbl->base != TABLE) error('i',"expr.typ(%d)",tbl->base);
 //if (b == NAME) error('d',"name %d %d %s",this,string,string?string:"?");
 	if (tp) {
-/*error('d',"expr.typ %d (checked) tbl=%d",this,tbl);*/
 		if (b == NAME) Pname(this)->use();
 		return this;
 	}
-//error('d',"expr.typ %d%k e1 %d%k e2 %d%k tbl %d\n",this,base,e1,e1?e1->base:0,e2,e2?e2->base:0,tbl);
 	switch (b) {		/* is it a basic type */
 	case DUMMY:
 		error("emptyE");
@@ -429,7 +419,6 @@ if (this == 0) error('i',"0->expr.typ");
 		goto save;
 	}
 	save:
-/*error('d',"%s const_save %d",string,const_save);*/
 		if (const_save) {
 			int ll = c_strlen(string);
 			char* p = new char[ll];
@@ -450,7 +439,6 @@ if (this == 0) error('i',"0->expr.typ");
 		return tbl->insert(n,0); 
 
 	case NAME:
-/*error('d',"name %s",string);*/
 	{	Pexpr ee = tbl->find_name((Pname)this,0,0);
 		if (ee->tp->base == RPTR) return ee->contents();
 		return ee;
@@ -477,7 +465,6 @@ if (this == 0) error('i',"0->expr.typ");
 		Ptype tt = t = tp2;
 		tt->dcl(tbl);
 	zaq:				/* is the cast legal? */
-//error('d',"tt %d %d",tt,tt?tt->base:0);
 		switch (tt->base) {
 		case TYPE:
 			tt = Pbase(tt)->b_name->tp;	goto zaq;
@@ -498,7 +485,6 @@ if (this == 0) error('i',"0->expr.typ");
 
 		/* now check cast against value, INCOMPLETE */
 
-//error('d',"cast e1 %d %k",e1,e1->base);
 		tt = t;
 
 		if (e1 == dummy) {
@@ -512,7 +498,6 @@ if (this == 0) error('i',"0->expr.typ");
 		
 		if (etp->base == COBJ) {
 			int i = can_coerce(tt,etp);
-//error('d',"cast%t->%t -- %d%n",tt,etp,i,Ncoerce);
 			if (i==1 && Ncoerce) {
 				Pname cn = Pbase(etp)->b_name;
 				Pclass cl = Pclass(cn->tp);
@@ -569,7 +554,6 @@ if (this == 0) error('i',"0->expr.typ");
 		case RPTR:		// (x&)e: pretend e is an x
 			if ((e1->base==CALL || e1->base==G_CALL || e1->lval(0))
 			&& Pptr(tt)->typ->tsizeof()<=etp->tsizeof()) {
-//error('d',"%t(%t)",t,etp);
 				e1 = e1->address();	// *(x*)&e
 				tp = t;
 				return contents();
@@ -579,7 +563,6 @@ if (this == 0) error('i',"0->expr.typ");
 			break;
 
 		case COBJ:
-//error('d',"%n ctor %d",cn,ctor);
 			base = VALUE;	// (x)e => x(e): construct an x from e
 			e1 = new expr(ELIST,e1,0);
 			return typ(tbl);
@@ -606,11 +589,9 @@ if (this == 0) error('i',"0->expr.typ");
 	{	Ptype tt = tp2;
 		Pclass cl;
 		Pname cn;
-//error('d',"value %d %d (%d %k)",tt,tt?tt->base:0,e1,e1?e1->base:0);
 		
 		tt->dcl(tbl);
 	vv:
-//error('d',"vv %d %d",tt,tt?tt->base:0);
 		switch (tt->base) {
 		case TYPE:
 			tt = Pbase(tt)->b_name->tp;
@@ -635,7 +616,6 @@ if (this == 0) error('i',"0->expr.typ");
 			if (e1 && e1->e2==0) {		/* single argument */
 				e1->e1 = e1->e1->typ(tbl);
 				Pname acn=e1->e1->tp->is_cl_obj();
-//error('d',"acn%n itor%d",acn,acn?cl->itor:0);
 				if (acn
 				&& acn->tp==cl
 				&& cl->has_itor()==0) {
@@ -663,7 +643,6 @@ if (this == 0) error('i',"0->expr.typ");
 				e2 = 0;
 				return this;
 			}
-//error('d',"value %n.%n",e2,ctor);
 			int tv = 0;
 			if (e2 == 0) {	/*  x(a) => x temp; (temp.x(a),temp) */
 				Ptable otbl = tbl;
@@ -672,7 +651,6 @@ if (this == 0) error('i',"0->expr.typ");
 					tbl = Cstmt->memtbl;
 				}
 				char* s = make_name('V');
-//error('d',"%s: %d %d",s,otbl,tbl);
 				Pname n = new name(s);
 				n->tp = tp2;
 				n = n->dcl(tbl,ARG); /* no init! */
@@ -690,7 +668,6 @@ if (this == 0) error('i',"0->expr.typ");
 			e1 = new ref(DOT,e2,ctor);
 			e2 = a;
 			ee = ee->typ(tbl);
-//error('d',"ee %t",ee->tp);
 			if (tv == 0) {	// deref value returned by constructor
 				ee = new expr(DEREF,ee,0);
 				ee->tp = ee->e1->tp;
@@ -706,12 +683,10 @@ if (this == 0) error('i',"0->expr.typ");
 		bit v = 0;
 		bit old = new_type;
 		new_type = 1;
-/*error('d',"new%t e1 %d %d",tt,e1,e1?e1->base:0);*/
 		tt->dcl(tbl);
 		new_type = old;
 		if (e1) e1 = e1->typ(tbl);
 	ll:
-//error('d',"tt %d %d",tt,tt?tt->base:0);
 		switch (tt->base) {
 		default:
 			if (e1) {
@@ -737,7 +712,6 @@ if (this == 0) error('i',"0->expr.typ");
 				Pname ctor = cl->has_ctor();
 				TOK su;
 				if (ctor) {
-/*error('d',"cobj%n tp%t",ctor,ctor->tp);*/
 					if (v) {
 						Pname ic;
 						if (e1)
@@ -752,16 +726,13 @@ if (this == 0) error('i',"0->expr.typ");
 					/*(void) e1->fct_call(tbl);*/
 				}
 				else if (su=cl->is_simple()) { 
-/*error('d',"simple cobj%k",su);*/
 					if (e1) error("new%n withIr",cn);
 				}
 				else {
-/*error('d',"not simple and no constructor?");*/
 				}
 			}
 		}
 		}
-//error('d',"v==%d",v);
 		tp = (v) ? (Ptype)tx : (Ptype)new ptr(PTR,tx,0);
 		return this;
 	}
@@ -802,7 +773,6 @@ if (this == 0) error('i',"0->expr.typ");
 				
 			for (e=this; e; e=ex) {
 				Pexpr ee = e->e1;
-/*error('d',"e %d %d ee %d %d",e,e?e->base:0,ee,ee?ee->base:0);*/
 				if (e->base != ELIST) error('i',"elist%k",e->base);
 				if (ex = e->e2) {	/* look ahead for end of list */
 					if (ee == dummy) error("EX in EL");
@@ -834,7 +804,6 @@ if (this == 0) error('i',"0->expr.typ");
 
 		if (base == REF) {
 		xxx:
-//error('d',"xxx %t",t);
 			switch (t->base) {
 			case TYPE:	t = Pbase(t)->b_name->tp;	goto xxx;
 			default:	error("nonP ->%n",mem);
@@ -851,7 +820,6 @@ if (this == 0) error('i',"0->expr.typ");
 			case ANY:	atbl = any_tbl;			goto mm;
 			case COBJ:	break;
 			}
-//error('d',"dot e1 %k %d",e1->base,e1->base);
 			switch (e1->base) {	/* FUDGE, but cannot use lval (consts) */
 			case CM:
 				/* ( ... , x). => ( ... , &x)-> */
@@ -868,7 +836,6 @@ if (this == 0) error('i',"0->expr.typ");
 			}
 			case CALL:
 			case G_CALL:
-//error('d',"call%d, %n %d %d",e1->fct_name,e1->fct_name,Pfct(e1->fct_name->tp)->f_inline,Pfct(e1->fct_name->tp)->f_virtual);
 #ifdef BSD
 				if (e1->fct_name
 				&& Pfct(e1->fct_name->tp)->f_inline
@@ -919,7 +886,6 @@ if (this == 0) error('i',"0->expr.typ");
 			if (atbl = b->b_table) goto mm;
 			s = b->b_name->string;	/* lookup the class name */
 			if (s == 0) error('i',"%kN missing",CLASS);
-//error('d',"lookup %s",s);
 			nn = tbl->look(s,CLASS);
 			if (nn == 0) error('i',"%k %sU",CLASS,s);
 			if (nn != b->b_name) b->b_name = nn;
@@ -930,7 +896,6 @@ if (this == 0) error('i',"0->expr.typ");
 		mm:
 			if (atbl->base != TABLE) error('i',"atbl(%d)",atbl->base);
 			nn = (Pname)atbl->find_name(mem,2,0);
-//error('d',"nn%n %d %d",nn,nn->n_stclass,nn->n_scope);
 			switch (nn->n_stclass) {
 			case 0:
 				mem = nn;	
@@ -944,7 +909,6 @@ if (this == 0) error('i',"0->expr.typ");
 
 	case CALL:	/* handle undefined function names */
 		if (e1->base==NAME && e1->tp==0) {
-//error('d',"call %d %s",e1,e1->string);
 			e1 = tbl->find_name(Pname(e1),1,e2);
 		}
 		break;
@@ -995,7 +959,6 @@ if (this == 0) error('i',"0->expr.typ");
 	}
 	else
 		n2 = 0;
-//error('d',"overload %k: %s %s\n", bb, n1?n1->string:"1", n2?n2->string:"2");
 	if (n1==0 && n2==0) goto not_overloaded;
 {
 	/* first try for non-member function:	op(e1,e2) or op(e2) or op(e1) */
@@ -1007,7 +970,6 @@ if (this == 0) error('i',"0->expr.typ");
 	int go = gname ? over_call(gname,ee1) : 0;
 	int nc = Nover_coerce;	// first look at member functions						// then if necessary check for ambiguities
 	if (go) gname = Nover;
-//error('d',"global%n go=%d nc=%d",gname,go,nc);
 
 	if (n1) {				/* look for member of n1 */	
 		Ptable ctbl = Pclass(n1->tp)->memtbl;
@@ -1020,7 +982,6 @@ if (this == 0) error('i',"0->expr.typ");
 		}
 
 		int mo = over_call(mname,e2);
-//error('d',"n1%n %d",mname,mo);
 		switch (mo) {
 		case 0:	
 			if (go == 2) goto glob;
@@ -1041,14 +1002,12 @@ if (this == 0) error('i',"0->expr.typ");
 		case 2:
 			if (go == 2) error("%k defined both as%n and%n",bb,gname,Nover);
 		}
-//error('d',"%k mtbl %d ctbl %d",bb,mname->n_table,ctbl);
 		if (bb==ASSIGN && mname->n_table!=ctbl) {	/* inherited = */
 			//if (n1->tsizeof()!=mname->?)
 			error("assignment not defined for class%n",n1);
 			tp = any_type;
 			return this;
 		}
-//error('d',"Nover %n %k",Nover,Nover->tp->base);
 		base = G_CALL;			/* e1.op(e2) or e1.op() */
 		e1 = new ref(DOT,e1,Nover);
 		if (ee1) delete ee1;
@@ -1066,7 +1025,6 @@ if (this == 0) error('i',"0->expr.typ");
 		}
 		
 		int mo = over_call(mname,0);
-/*error('d',"n2%n %d",mname,mo);*/
 		switch (mo) {
 		case 0:		
 			if (1 < Nover_coerce) goto am2;
@@ -1093,7 +1051,6 @@ if (this == 0) error('i',"0->expr.typ");
 	}
 	
 glob:
-//error('d',"glob %d",nc);
 	if (1 < nc) {
 		error("ambiguous operandTs%t%t for%k",t1,t2,b);
 		tp = any_type;
@@ -1104,12 +1061,10 @@ glob:
 			if (n1) {
 				Pclass cl = (Pclass)n1->tp;
 				if (cl->conv) error('w',"overloaded%k may be ambiguous",bb);
-//error('d',"go n1");
 			}
 			else if (n2) {
 				Pclass cl = (Pclass)n2->tp;
 				if (cl->conv) error('w',"overloaded%k may be ambiguous",bb);
-//error('d',"bb%k go n2 %n",bb,gname);
 			}
 		}
 		base = G_CALL;			/* op(e1,e2) or op(e1) or op(e2) */
@@ -1121,7 +1076,6 @@ glob:
 	if (ee2) delete ee2;
 	if (ee1 && ee1!=ee2) delete ee1;
 	e2 = oe2;
-//error('d',"bb%k",bb);
 	switch(bb) {
 	case ASSIGN:
 	case ADDROF:
@@ -1135,7 +1089,6 @@ glob:
 			int val = 0;
 			Pclass cl = (Pclass)n1->tp;
 			for ( Pname on = cl->conv; on; on=on->n_list) {
-//error('d',"oper_coerce n1%n %t",on,(on)?Pfct(on->tp)->returns:0);
 				Pfct f = (Pfct)on->tp;
 				if (bb==ANDAND || bb==OROR) {
 					e1 = check_cond(e1,bb,tbl);
@@ -1166,7 +1119,6 @@ glob:
 			int val = 0;
 			Pclass cl = (Pclass)n2->tp;
 			for ( Pname on = cl->conv; on; on=on->n_list) {
-//error('d',"oper_coerce n2%n %t",on,(on)?on->tp:0);
 				Pfct f = (Pfct)on->tp;
 				if (bb==ANDAND || bb==OROR || bb==NOT) {
 					e2 = check_cond(e2,bb,tbl);
@@ -1208,7 +1160,6 @@ glob:
 }
 not_overloaded:
 	t = (t1==0) ? t2 : (t2==0) ? t1 : 0;
-/*fprintf(stderr,"%s: e1 %d %d e2 %d %d\n",oper_name(b),e1,e1?e1->base:0,e2,e2?e2->base:0);*/
 	switch (b) {		/* are the operands of legal types */
 	case G_CALL:
 	case CALL:
@@ -1217,7 +1168,6 @@ not_overloaded:
 		return this;
 
 	case DEREF:
-//error('d',"deref %t",t?t:t1);
 		if (e1 == dummy) error("O missing before []\n");
 		if (t) {	/*	*t	*/
 			t->vec_type();
@@ -1379,14 +1329,12 @@ not_overloaded:
 		else {
 			r1 = t1->num_ptr(b);
 			r2 = t2->num_ptr(b);
-//error('d',"r1 %d r2 %d",r1,r2);
 			if (r1==FCT && r2==FCT) {	// fudge
 				if (t1->check(t2,ASSIGN)) error("badTs in ?:E: %t and %t",t1,t2);
 				t = t1;
 			}
 			else
 				nppromote(b);
-//error('d',"t: %d %t   t1: %d %t   t2: %d %t",t,t,t1,t1,t2,t2);
 			if (t!=t1 && t->check(t1,0)) {
 				e1 = new texpr(CAST,t,e1);
 				e1->tp = t;
@@ -1462,7 +1410,6 @@ not_overloaded:
 
 			if (c1) {
 				Pname c2 = t2->is_cl_obj();
-//error('d',"%t=%t %d %d",t1,t2,c1,c2);
 				if (c1 != c2) {
 					e2 = new expr(ELIST,e2,0);
 					e2 = new texpr(VALUE,t1,e2);
@@ -1474,7 +1421,6 @@ not_overloaded:
 				}
 				else {	// check for bitwise copy
 					Pclass cl = Pclass(c1->tp);
-//error('d',"bit %d",cl->bit_ass);
 					if (cl->bit_ass == 0)
 						error('s',"bitwise copy: %s has a member with operator=()",cl->string);
 					else if (cl->itor && cl->has_dtor())
@@ -1484,7 +1430,6 @@ not_overloaded:
 			break;
 		}
 		case PTR:
-/*error('d',"ptr %d %d",t1,t1?t1->base:0);*/
 		{	Pfct ef = Pfct(Pptr(t1)->typ);
 			if (ef->base == FCT) {
 				Pfct f;
@@ -1502,7 +1447,6 @@ not_overloaded:
 					goto ad;
 				case DOT:
 				case REF:
-/*error('d',"dot %d %d",e2->mem->tp,e2->mem->tp?e2->mem->tp->base:0);*/
 					f = (Pfct)e2->mem->tp;
 					switch (f->base) {
 					case FCT:
@@ -1541,7 +1485,6 @@ not_overloaded:
 			&& (i=can_coerce(t1,t2))
 			&& Ncoerce) {
 				if (1 < i) error("%d possible conversions for assignment",i);
-//error('d',"%t =%t",t1,t2);
 				Pclass cl = (Pclass)cn->tp;
 				Pref r = new ref(DOT,e2,Ncoerce);
 				Pexpr rr = r->typ(tbl);
@@ -1553,7 +1496,6 @@ not_overloaded:
 				return this;
 			}
 		}
-//error('d',"check(%t,%t)",e1->tp,t2);
 		if (e1->tp->check(t2,ASSIGN)) error("bad assignmentT:%t =%t",e1->tp,t2);		
 		t = e1->tp;				/* the type of the lhs */
 		break;

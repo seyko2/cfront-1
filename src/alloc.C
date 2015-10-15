@@ -56,7 +56,6 @@ char *malloc(unsigned nbytes)	/* general-purpose storage allocator */
 			}
 			allocp = q;
 
-//error('d',"malloc(%d %d)->%d %d\n",nbytes,nunits*sizeof(HEADER),p+1,p+nunits);
 			if (maxalloc < nunits) maxalloc = nunits;
 
 			register int* x = (int*)(p+1);

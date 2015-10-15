@@ -97,7 +97,6 @@ void name.check_oper(Pname cn)
 		} else {
 			Pfct f = (Pfct)tp;
 			Ptype tx = (Ptype)n_initializer;
-/*error('d',"operator%t()",tx);*/
 			n_initializer = 0;
 			if (f->base != FCT) error("badT for%n::operator%t()",cn,tx);
 			if (f->returns != defa_type) {
@@ -170,7 +169,6 @@ Pname name.dcl(Ptable tbl, TOK scope)
 	if (tbl == 0) error('i',"%n->name.dcl(tbl=0,%k)",this,scope);
 	if (tbl->base != TABLE) error('i',"%n->name.dcl(tbl=%d,%k)",this,tbl->base,scope);
 	if (tp == 0) error('i',"name.dcl(%n,%k)T missing",this,scope);
-/*fprintf(stderr,"(%d %s)->dcl(tbl=%d,scope=%d) tp = (%d %d)\n",this,string,tbl,scope,tp,tp->base); fflush(stderr);*/
 	Cdcl = this;
 	switch (base) {
 	case TNAME:
@@ -308,7 +306,6 @@ xdr:
 			n_sto = EXTERN;
 			nn = dcl(gtbl,EXTERN);
 			friend_in_class--;
-/*fprintf(stderr,"ff %s %d\n",nn->string,nn->tp->base);*/
 			cc->unstack();
 			if (nn->tp->base == OVERLOAD) {
 				Pgen g = (Pgen)nn->tp;
@@ -454,7 +451,6 @@ xdr:
 		Pname bn;
 	//	Pclass nest;
 		Pname nx = ktbl->look(string,0);		// TNAME
-//error('d',"%s: nx%n",string,nx);
 		if (nx == 0) {
 			/*	search for hidden name for
 					(1) nested class declaration
@@ -462,7 +458,6 @@ xdr:
 			*/
 			int tn = 0;
 			for (nx=ktbl->look(string,HIDDEN); nx; nx=nx->n_tbl_list) {
-//error('d',"%s: nxi%n key%d base%d",string,nx,nx->n_key,nx->tp->base);
 				if (nx->n_key != HIDDEN) continue;
 				if (nx->tp->base != COBJ) {
 					tn = 1;
@@ -486,7 +481,6 @@ xdr:
 		}
 		else {
 			if (tbl != gtbl) { // careful: local class def
-//error('d',"%n: local lex level %d",nx->lex_level);
 				if (nx->lex_level == 0) // imperfect
 					error('s',"localC%n and globalC%n",this,nx);
 			}
@@ -495,15 +489,12 @@ xdr:
 	//		nest = 0;
 		}
 bbb:
-/*fprintf(stderr,"bbb: bt %d %d\n",bt,bt->base); fflush(stderr);*/
 		Pname ln = tbl->look(bn->string,0);
-//error('d',"ln %d %d",ln,ln?ln->n_table==tbl:0);
 		if (ln && ln->n_table==tbl) error('w',"%n redefined",ln);
 		bn->where = nx->where;
 		Pname bnn = tbl->insert(bn,CLASS);	// copy for member lookup
 		cl = (Pclass)bn->tp;
 								/* CLASS */
-/*fprintf(stderr,"cl %d %d\n",cl,cl->base); fflush(stderr);*/
 		if (cl->defined&(DEFINED|SIMPLIFIED))
 			error("C%n defined twice",this);
 		else {
@@ -552,7 +543,6 @@ bbb:
 		int can_overload;
 		int in_class_dcl = (int)cc->not;
 		int just_made = 0;
-//error('d',"fct%n",this);
 		if (f->f_inline) n_sto = STATIC;
 
 		if (f->argtype) {
@@ -565,7 +555,6 @@ bbb:
 //or('d',"init %k",init->base);
 Pname cln;
 if (cln = a->tp->is_cl_obj()) {
-//error('d',"a%n cln%n init %k",a,cln,init->base);
 	if (init->base==VALUE) {
 		switch (init->tp2->base) {
 		case CLASS:
@@ -584,7 +573,6 @@ if (cln = a->tp->is_cl_obj()) {
 	}
 	else {
 	inin2:
-//error('d',"inin2: %k %s",init->base,init->base==NAME?init->string:"");
 		if (init->base == ILIST) error('s',"list as AIr");
 		Pexpr i = init->typ(tbl);
 		init = class_init(a,a->tp,i,tbl);
@@ -595,7 +583,6 @@ if (cln = a->tp->is_cl_obj()) {
 	}
 }
 else if (a->tp->is_ref()) {
-//error('d',"%n is ref",a);
 	init = init->typ(tbl);
 	int tcount = stcount;
 	init = ref_init(Pptr(a->tp),init,tbl);
@@ -603,7 +590,6 @@ else if (a->tp->is_ref()) {
 	init->simpl();
 	init->permanent = 2;
 	a->n_initializer = init;
-//error('d',"ok");
 }
 else {
 	int i = 0;
@@ -703,7 +689,6 @@ else {
 			can_overload = 0;
 			break;
 		case ASSIGN:
-//error('d',"assign %n",class_name);
 			if (class_name && f->nargs==1) {
 				Ptype t = f->argtype->tp;
 				Pname an = t->is_cl_obj();  // X::operator=(X) ?
@@ -719,7 +704,6 @@ else {
 					}
 				}
 				if (an && an==class_name) Pclass(an->tp)->bit_ass = 0;
-//error('d',"%n ==> %d",an,Pclass(class_name)->bit_ass);
 			}
 			else if (f->nargs == 2) {
 				Ptype t = f->argtype->tp;
@@ -773,7 +757,6 @@ else {
 			
 		if (Nold) {
 			Pfct nf = (Pfct)nn->tp;
-/*error('d',"%n: tp%t nf%t",nn,tp,nf);*/
 			if (nf->base==ANY || f->base==ANY)
 				;
 			else if (nf->base == OVERLOAD) {
@@ -822,7 +805,6 @@ else {
 					Pgen g = new gen(string);
 					Pname n1 = g->add(nn,in_class_dcl);
 					Pname n2 = g->add(this,0);
-/*error('d',"n1%n n2%n\n",n1,n2);*/
 					nn->tp = (Ptype)g;
 					nn->string = g->string;
 					nn = n2;
@@ -867,7 +849,6 @@ else {
 				for (a1=f->argtype, a2=nf->argtype; a1; a1=a1->n_list, a2=a2->n_list) {
 					int i1  =  a1->n_initializer || a1->n_evaluated;
 					int i2  =  a2->n_initializer || a2->n_evaluated;
-//error('d',"bdbd: i %d %d eval %d %d val %d %d",i1,i2,a1->n_evaluated,a2->n_evaluated,a1->n_val,a2->n_val);
 					if (i1) {
 						if (i2
 						&& (	a1->n_evaluated==0
@@ -884,7 +865,6 @@ else {
 				}
 				f->f_virtual = nf->f_virtual;
 				f->f_this = nf->f_this;
-/*fprintf(stderr,"bdbd %s: f %d inl %d nf %d inl %d\n",string,f,f->f_inline,nf,nf->f_inline);*/
 				nn->tp = f;
 				if (f->f_inline) {
 					if (nf->f_inline==0 && nn->n_used)
@@ -906,7 +886,6 @@ else {
 				for (a1=f->argtype, a2=nf->argtype; a1; a1=a1->n_list, a2=a2->n_list) {
 					int i1  =  a1->n_initializer || a1->n_evaluated;
 					int i2  =  a2->n_initializer || a2->n_evaluated;
-//error('d',"stst %d %d",i1,i2);
 					if (i1) {
 						if (i2) {
 							if (a1->n_evaluated==0
@@ -942,7 +921,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 			if (tbl==gtbl && n_oper) {	// overload operator
 				Pgen g = new gen(string);
 				Pname n1 = g->add(nn,1);
-//error('d',"overload %n -> %s",this,n1->string);
 				nn->tp = Ptype(g);
 				nn->string = g->string;
 				string = n1->string;
@@ -956,7 +934,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 				&& n_sto==0
 				&& f->body==0) // ``explicitly'' extern
 					nn->n_sto = EXTERN;
-/*fprintf(stderr,"thth %s: f %d nn->tp %d inl %d\n",string,f,nn->tp,f->f_inline);*/
 			if (class_name && etbl!=gtbl) {	/* beware of implicit declatation */
 				Pname cn = nn->n_table->t_name;
 				Pname tt = new name("this");
@@ -1013,7 +990,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 			}
 			break;
 		case TYPE:
-/*error('d',"just_made %d %n",just_made,this);*/
 			if (just_made) {
 				nn->n_list = Pclass(class_name->tp)->conv;
 				Pclass(class_name->tp)->conv = nn;
@@ -1111,7 +1087,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 				bit_offset = b*BI_IN_BYTE;
 			}
 		}
-//error('d',"byteoff %d bitoff %d bits %d",byte_offset,bit_offset,fld->b_bits);
 		int x = (bit_offset += fld->b_bits);
 		if (BI_IN_WORD < x) {
 			fld->b_offset = 0;
@@ -1133,7 +1108,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 
 	case COBJ:
 	{	Pclass cl = Pclass(Pbase(tp)->b_name->tp);
-/*fprintf(stderr,"COBJ %d %s -> (%d %d)\n",tp,Pbase(tp)->b_name->string,cl,cl->base); fflush(stderr);*/
 		if (cl->csu == ANON) {	/* export member names to enclosing scope */
 			Pname nn;
 			int i;
@@ -1165,7 +1139,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 		nn = tbl->insert(this,0);
 
 		n_table = nn->n_table;
-//error('d',"Nold %d tbl %d nn %d%n tp%t gtbl %d",Nold,tbl,nn,nn,nn->tp,gtbl);
 		if (Nold) {
 			if (nn->tp->base == ANY) goto zzz;
 
@@ -1228,7 +1201,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 	zzz:
 		if (base != TNAME) {
 			Ptype t = nn->tp;
-//fprintf(stderr,"tp %d %d nn->tp %d %d\n",tp,tp->base,nn->tp,nn->tp?nn->tp->base:0); fflush(stderr);
 			if (t->base == TYPE) {
 				Ptype tt = Pbase(t)->b_name->tp;
 				if (tt->base == FCT) nn->tp = t = tt;
@@ -1320,7 +1292,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 			Pclass cl = (Pclass)cn->tp;
 			Pname ctor = cl->has_ctor();
 			Pname dtor = cl->has_dtor();
-//error('d',"c/dtor %n %d %d",cn,ctor,dtor);
 			if (dtor) {
 				Pstmt dls;
 				switch ( nn->n_scope ) {
@@ -1368,7 +1339,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 				Pexpr oo = nn;
 				for (int vi=vec_seen; vi; vi--) oo = oo->contents();
 				int sti = 0;
-//error('d',"ctor init=%d n_scope=%d",init,nn->n_scope);
 				switch (nn->n_scope) {
 				case EXTERN:
 					if (init==0 && n_sto==EXTERN) goto ggg;
@@ -1386,7 +1356,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 					}
 					break;
 				case ARG:
-//error('d',"init %d",init);
 /*
 					if (init) {
 						// check default arguments
@@ -1404,7 +1373,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 				}
 				const_save = 1;
 				nn->assign();
-//error('d',"init %d %n tbl %d",init,nn,tbl);
 				Ptable otbl = tbl;
 				if (sti) {	// to collect temporaries generated
 						// in static initializers where we
@@ -1413,10 +1381,8 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 					tbl = sti_tbl;
 					if (n_sto == EXTERN) nn->n_sto = n_sto = 0;
 				}
-//error('d',"init %d %d vec_seen %d",init,init?init->base:0,vec_seen);
 				if (init) {
 					if (init->base==VALUE) {
-//error('d',"value %d",init->tp2->base);
 						switch (init->tp2->base) {
 						case CLASS:
 							if (Pclass(init->tp2)!=cl) goto inin;
@@ -1430,7 +1396,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 					}
 					else {
 					inin:
-//error('d',"inin:");
 						init = init->typ(tbl);
 						init = class_init(nn,nn->tp,init,tbl);
 					}
@@ -1465,7 +1430,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 			init->tp = any_type;
 		}
 		else {
-//error('d',"init%n: %k",nn,init->base);
 			switch (init->base) {
 			case DEREF:		// *constructor?
 				if (init->e1->base == G_CALL) {	
@@ -1505,7 +1469,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 			}
 			else {			// bitwise copy ok?
 						// possible to get here?
-//error('d',"not simple %n",this);
 				init = init->typ(tbl);
 				if (nn->tp->check(init->tp,ASSIGN)==0)
 					goto str;
@@ -1533,7 +1496,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 			goto lll;
 		default:
 		str:
-//error('d',"str: %n",this);
 			if (init == 0) {
 				switch (n_scope) {
 				case ARG:
@@ -1663,7 +1625,6 @@ if (n_sto == STATIC) nn->n_sto = STATIC; else
 			&& (i=can_coerce(nt,init->tp))
 			&& Ncoerce) {
 				if (1 < i) error("%d possible conversions forIr",i);
-/*error('d',"dcl %t<-%t",nt,init->tp);*/
 				Pclass cl = (Pclass)cn->tp;
 				Pref r = new ref(DOT,init,Ncoerce);
 				Pexpr c = new expr(G_CALL,r,0);
@@ -1811,7 +1772,6 @@ void fct.dcl(Pname n)
 		if (f_init) error(0,"unXAL: not a constructor");
 	}
 	else {
-//error('d',"%n:f_init %d %d",n,f_init,f_init?f_init->base:0);
 		if (f_init) {				// explicit initializers
 			Pname  bn  = cc->cot->clbase;
 			Ptable tbl = cc->cot->memtbl;
@@ -1895,7 +1855,6 @@ Pexpr fct.base_init(Pname bn, Pexpr i, Ptable ftbl)
 {
 	Pclass bcl = (Pclass)bn->tp;
 	Pname bnw = bcl->has_ctor();
-//error('d',"base_init%n %d i %d %d bcl %d %d",bn,bnw,i,i?i->base:0,bcl,bcl?bcl->base:0);
 	if (bnw) {
 		Ptype t = bnw->tp;
 		Pfct f  = Pfct((t->base==FCT) ? t : Pgen(t)->fct_list->f->tp);
@@ -1904,7 +1863,6 @@ Pexpr fct.base_init(Pname bn, Pexpr i, Ptable ftbl)
 		Pexpr v  = new texpr(VALUE,bcl,i);	// ?.base(i)
 		v->e2    = new expr(DEREF,th,0);	// (*(base*)this).base(i)
 		v = v->typ(ftbl);			// *base(&*(base*)this,i)
-//error('d',"v %d %k",v,v->base);
 		switch (v->base) {
 		case DEREF:
 			Pexpr vv = v;
@@ -1931,13 +1889,11 @@ Pexpr fct.mem_init(Pname member, Pexpr i, Ptable ftbl)
 	return "member_ctor( m, i )"
 */
 {
-//error('d',"mem_init(%n)",member);
 	if (member->n_stclass == STATIC) error('s',"MIr for static%n",member);
 	Pname cn = member->tp->is_cl_obj();	// first find the class name
 	if (cn) {
 		Pclass mcl = Pclass(cn->tp);	// then find the classdef
 		Pname ctor = mcl->has_ctor();
-//error('d',"cn%n ctor %d",cn,ctor);
 		if (ctor) {	// generate: this->member.cn::cn(args)
 			Pref tn = new ref(REF,f_this,member);
 			Pref ct = new ref(DOT,tn,ctor);

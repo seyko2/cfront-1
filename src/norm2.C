@@ -29,7 +29,6 @@ fct.fct(Ptype t, Pname arg, TOK known)
 	nargs_known = known;
 	returns = t;
 	argtype = arg; 
-/*fprintf(stderr,"fct t %d %d arg %d %d -> %d\n",t, t?t->base:0, arg, arg?arg->base:0, this);*/
 
 	if (arg==0 || arg->base==ELIST) return;
 
@@ -69,7 +68,6 @@ expr.expr(TOK ba, Pexpr a, Pexpr b)
 		register Pexpr q = (Pexpr) malloc(EBITE*sizeof(class expr));
 		for (p=expr_free=&q[EBITE-1]; q<p; p--) p->e1 = p-1;
 		(p+1)->e1 = 0;
-/*fprintf(stderr, "malloc %d expr_free=%d p+1=%d\n", EBITE*sizeof(class expr), expr_free, p+1);*/
 	}
 	else
 		expr_free = p->e1;
@@ -89,7 +87,6 @@ expr.expr(TOK ba, Pexpr a, Pexpr b)
 	}
 
 	this = p;
-/*fprintf(stderr,"expr.ctor(%d,%d,%d)->%d\n",ba,a,b,this); fflush(stderr);*/
 
 ret:
 	Ne++;
@@ -101,7 +98,6 @@ ret:
 expr.~expr()
 {
 	NFe++;
-/*fprintf(stderr,"%d->expr.dtor(%d %d %d)\n",this,base,e1,e2); */
 	e1 = expr_free;
 	expr_free = this;
 	this = 0;
@@ -162,7 +158,6 @@ classdef.classdef(TOK b, Pname n)
 
 basetype.basetype(TOK b, Pname n)
 {
-/*fprintf(stderr,"%d->basetype.basetype(%d %d)\n",this,b,n);*/
 	Nbt++;
 	switch (b) {
 	case 0:				break;
@@ -210,7 +205,6 @@ name.name(char* s) : (NAME,0,0)
 		register Pname q = (Pname) malloc(NBITE*sizeof(class name));
 		for (p=name_free=&q[NBITE-1]; q<p; p--) p->n_tbl_list = p-1;
 		(p+1)->n_tbl_list = 0;
-/*fprintf(stderr, "malloc %d name_free=%d p+1=%d\n", NBITE*sizeof(class name), name_free, p+1); */
 	}
 	else
 		name_free = p->n_tbl_list;
@@ -230,7 +224,6 @@ name.name(char* s) : (NAME,0,0)
 	}
 
 	this = p;
-//fprintf(stderr,"%d: new name %s %d ll %d bl %d\n",this,s,base,lex_level,bl_level);
 
 	Nn++;
 	string = s;
@@ -242,7 +235,6 @@ name.name(char* s) : (NAME,0,0)
 name.~name()
 {
 	NFn++;
-/*fprintf(stderr,"delete %d: %s %d\n",this,string,base);*/
 	n_tbl_list = name_free;
 	name_free = this;
 	this = 0;

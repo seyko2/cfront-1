@@ -182,7 +182,6 @@ Pbase basetype.check(Pname n)
 {
 	b_inline = 0;
 	b_virtual = 0;
-//fprintf(stderr,"check n: %d %s n_oper %d b: %d %d %s\n",n,(n)?n->string:"",n?n->n_oper:0,this,base,(b_name)?b_name->string:"");fflush(stderr);
 	if (b_xname && (n->tp || n->string)) {
 		if (base)
 			error("badBT:%k%n",base,b_xname);
@@ -291,7 +290,6 @@ Pbase basetype.check(Pname n)
 			return void_type;
 		case TYPE:
 			/* use a single base saved in the keyword */
-//fprintf(stderr,"type %d bn %d %s q %d\n",this,b_name,b_name->string,b_name->n_qualifier);
 			if (b_name->n_qualifier) {
                                 Pbase b = (Pbase)b_name->n_qualifier;
                                delete this; return b;
@@ -344,7 +342,6 @@ Pname basetype.aggr()
 	case COBJ:
 	{	Pclass cl = (Pclass)b_name->tp;
 		char* s = cl->string;
-/*fprintf(stderr,"COBJ (%d %s) -> (%d %d) ->(%d %d)\n",this,b_name->string,b_name,b_name->base,cl,cl->base);*/
 		if (b_name->base == TNAME) error('i',"TN%n inCO",b_name);
 		if (b_const) error("const%k%n",cl->csu,b_name);
 
@@ -371,7 +368,6 @@ Pname basetype.aggr()
 
 	case EOBJ:
 	{	Penum en = (Penum)b_name->tp;
-/*fprintf(stderr,"EOBJ (%d %s) -> (%d %d) ->(%d %d)\n",this,b_name->string,b_name,b_name->base,en,en->base);*/
 		if (b_name->base == TNAME) error('i',"TN%n in enumO",b_name);
 		if (b_const) error("const enum%n",b_name);
 		if (en->e_body == 2) {
@@ -410,10 +406,8 @@ void name.hide()
 	hide "this": that is, "this" should not be a keyword in this scope
 */
 {
-//error('d',"hide%n %d %k tp %d",this,this,base,tp);
 	if (base != TNAME) return;
 	if (n_key == 0) {
-//error('d',"ll %d bl %d base %k",lex_level,bl_level,base);
 		if (lex_level == bl_level) {
 			if (this->base != TNAME)
 				error("%n redefined",this);
@@ -439,7 +433,6 @@ void set_scope(Pname tn)
 	for (Plist l=cl->tn_list; l; l=l->l) {
 		Pname n = l->f;
 		n->n_key = (n->lex_level) ? 0 : HIDDEN;
-//error('d',"set_scope%n %d",n,n->n_key);
 		modified_tn = new name_list(n,modified_tn);
 	}
 }
@@ -449,14 +442,12 @@ void restore()
 	for (Plist l=modified_tn; l; l=l->l) {
 		Pname n = l->f;
 		n->n_key =  (n->lex_level <= bl_level) ? 0 : HIDDEN;
-//error('d',"restore%n %d",n,n->n_key);
 	}
 }
 
 Pbase start_cl(TOK t, Pname c, Pname b)
 {
 	if (c == 0) c = new name(make_name('C'));
-//error('d',"c: %d %s",c->base,c->string);
 	Pname n = c->tname(t);			/* t ignored */
 	n->where = curloc;
 	Pbase bt = (Pbase)n->tp;		/* COBJ */
@@ -530,7 +521,6 @@ Pname name.tdef()
 	typedef "this"
 */
 {
-//error('d',"tdef%n",this);
 	Pname n = ktbl->insert(this,0);
 	if (tp == 0) error('i',"typedef%n tp==0",this);
 	n->base = base = TNAME;
@@ -549,13 +539,11 @@ Pname name.tname(TOK csu)
 	z:	(CLASS,ae);
 */
 {
-//fprintf(stderr,"tname %s %d ll %d\n",string,this,lex_level);
 	switch (base) {
 	case TNAME:
 		return this;
 	case NAME:
 	{	Pname tn = ktbl->insert(this,0);
-//fprintf(stderr,"tname tn %s %d ll %d (mod %d)\n",tn->string,tn,tn->lex_level,modified_tn);
 		Pname on = new name;
 		tn->base = TNAME;
 		tn->lex_level = lex_level;
@@ -578,7 +566,6 @@ Pname name.tname(TOK csu)
 		PERM(tn->tp);
 		PERM(on);
 		PERM(on->tp);
-/*fprintf(stderr,"tname %s -> n (%d %d) n->tp (%d %d)\n",string,tn,tn->base,tn->tp,tn->tp->base); fflush(stderr);*/
 		return tn;
 	}
 	default:
@@ -619,7 +606,6 @@ Pname name.normalize(Pbase b, Pblock bl, bit cast)
 		error("both extern and inline");
 		inli = 0;
 	}
-//fprintf(stderr,"name.norm(%d %s) tp (%d %d)\n",this,string,tp,tp->base);
 
 	if (stc==FRIEND && tp==0) {
 			/*	friend x;
@@ -648,7 +634,6 @@ Pname name.normalize(Pbase b, Pblock bl, bit cast)
 		Pfct f2 = (Pfct)f->returns;
 		if (f2 && f2->base==FCT) {
 			Pexpr e = f2->argtype;
-//error('d',"%s: mis-analyzedP toF",string);
 			if  (e->base == ELIST) {
 				//	get the real name, fix its type
 				if (e->e2 || e->e1->base!=DEREF) goto zse1;
@@ -659,7 +644,6 @@ Pname name.normalize(Pbase b, Pblock bl, bit cast)
 				n_oper = 0;
 				string = rn->string;
 				base = NAME;
-//error('d',"realN %n b==%t",rn,b);
 			}
 		}
 	}
@@ -671,7 +655,6 @@ zse1:
 				//	from object and function type declarations
 	case COBJ:
 		nn = b->b_name;
-//fprintf(stderr,"COBJ (%d %s) -> (%d %d body=%d)\n",nn,nn->string,nn->tp,nn->tp->base,Pclass(nn->tp)->c_body);
 		if (Pclass(nn->tp)->c_body==2) {	/* first occurrence */
 			if (tp && tp->base==FCT) {
 				error('s',&this->where,"%k%n defined as returnT for%n (did you forget a ';' after '}' ?)",Pclass(nn->tp)->csu,nn,this);
@@ -756,7 +739,6 @@ zse:
 			n->tp = t;
 			Pbase tb = b;
 		flatten:
-//error('d',"flatten %d %d %d",tb->base,b->b_unsigned,b->b_const);
 			switch (tb->base) {
 			case TYPE:   /* chase typedefs */
 				tb = (Pbase)tb->b_name->tp;
@@ -823,7 +805,6 @@ zse:
 		*/
 		{	Pname cn = f->returns->is_cl_obj();
 			bit clob = (cn || cl_obj_vec);
-//error('d',"%n: fr%t cn%n",n,f->returns,cn);
 			if (f->argtype) { /* check argument/initializer list */
 				Pname nn;
 
@@ -848,7 +829,6 @@ zse:
 					goto zzz;
 				}
 		is_obj:
-//fprintf(stderr,"is_obj: %d %s tp = %d %d\n",this,string,f->returns,f->returns->base); fflush(stderr);
 				/* it was an initializer: expand to constructor */
 				n->tp = f->returns;
 				if (f->argtype->base != ELIST) f->argtype = (Pname)new expr(ELIST,(Pexpr)f->argtype,0);
@@ -995,7 +975,6 @@ void fct.argdcl(Pname dcl, Pname fn)
 */
 {
 	Pname n;
-/*fprintf(stderr,"%d argtype %d %d dcl %d %d\n",this, argtype, argtype?argtype->base:0, dcl, dcl?dcl->base:0); fflush(stderr);*/
 	switch (base) {
 	case FCT:	break;
 	case ANY:	return;

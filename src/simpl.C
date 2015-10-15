@@ -172,7 +172,6 @@ void name.simpl()
 	{	Pfct f = (Pfct)tp;
 		Pname n;
 		Pname th = f->f_this;
-//error('d',"simpl%n tp=%t def=%d th=%d n_oper%k",this,tp,tp->defined,th,n_oper);
 		if (th) {
 			th->n_list = f->argtype;
 			if (n_oper == CTOR) f->s_returns = th->tp;
@@ -232,7 +231,6 @@ void name.simpl()
 		break;
 */
 	default:
-//error('d',"%n tp %t n_init %d",this,tp, n_initializer);
 		break;
 	}
 
@@ -404,7 +402,6 @@ int ass_count;
 			this->b_init == base::base(args) or 0
 		*/
 		if (b_init) {
-//error('d',"b_init %k",b_init->base);
 			switch (b_init->base) {
 			case ASSIGN:
 			case CM:
@@ -544,7 +541,6 @@ for (Pname nn = f_init; nn; nn=nn->n_list) {
 					goto dontknow;
 				};
 			default:
-/*fprintf(stderr,"t %d %d\n",tail->base,tail->e->base);*/
 				if (strcmp(curr_fct->string,"main"))	
 					error('w',"maybe no value returned from%n",curr_fct);
 				if (del_list) goto zaq;
@@ -642,7 +638,6 @@ Pstmt block.simpl()
 		Pstmt st = 0;
 		Pname cln;
 		Pexpr in = n->n_initializer;
-//error('d',"auto %n",n);
 		if (in) scope->init_stat = 2; /* initializer in this scope */
 
 		switch (n->n_scope) {
@@ -666,7 +661,6 @@ Pstmt block.simpl()
 			register char c3 = s[3];
 			if (s[0]=='_' && s[1]=='D' && isdigit(c3)) continue;
 		}
-//error('d',"cln %d",n->tp->is_cl_obj());
 		if ( cln=n->tp->is_cl_obj() ) {
 			Pclass cl = (Pclass)cln->tp;
 			Pname d = cl->has_dtor();
@@ -684,7 +678,6 @@ Pstmt block.simpl()
 					dd = dls;
 				ddt = dls;
 			}
-//error('d',"in %d %k %n",in,in?in->base:0,cln);
 			if (in) {
 				switch (in->base) {
 				case DEREF:		// *constructor?	
@@ -864,7 +857,6 @@ void classdef.simpl()
 
 void expr.simpl()
 {
-//error('d',"expr.simpl (%d) %d%k e1=%d e2=%d tp2=%d cf%n",permanent,this,base,e1,e2,tp2,curr_fct);
 	if (this==0 || permanent==2) return;
 
 	switch (base) {
@@ -899,7 +891,6 @@ void expr.simpl()
 		cln = tt->is_cl_obj();
 		if (cln) cl = (Pclass)cln->tp;
 		if ( cln && (n=cl->has_dtor()) ) {	// ~cl() might be virtual
-//error('d',"%n %d",n,Pfct(n->tp)->f_virtual);
 			if (e2 == 0) {		// e1->cl::~cl(1)
 				base = G_CALL;
 				e1 = new ref(REF,e1,n);
@@ -1100,7 +1091,6 @@ void expr.simpl()
 		sz *= esz;
 		const_expr = new expr(IVAL,(Pexpr)sz,0);
 		arg = (var_expr) ? (sz!=1) ? new expr(MUL,const_expr,var_expr) :var_expr : const_expr;
-//error('d',"new: (%t)_new(...)",tp);
 		base = CAST;
 		tp2 = tp;
 		e1 = new expr(G_CALL,new_fct,new expr(ELIST,arg,0));
@@ -1198,13 +1188,11 @@ void call.simpl()
 		Pname cln = f->returns->is_cl_obj();
 		if (cln && Pclass(cln->tp)->has_dtor()) error('s',"%n returned by%n is not used (%n has destructor)",cln,fn,cln);
 	}
-//error('d',"simpl call%n e1: %d%k",fn,e1,e1->base);
 	switch (e1->base) {
 	case DOT:
 	case REF:
 	{	Pref r = (Pref)e1;
 		Pexpr a1 = r->e1;
-//error('d',"simpl fn %s f %d fv %d",fn?fn->string:"?",f,f?f->f_virtual:0);
 		if (f && f->f_virtual) {
 			Pexpr a11 = 0;
 
@@ -1261,7 +1249,6 @@ void call.simpl()
 			return;				/* (*(T)p->vptr[i])(e2) */
 		}
 		else {
-//error('d',"a1 %k%k%n",a1->base,e1->base,r->mem);
 			if (e1->base == DOT) a1 = a1->address();
 			e2 = new expr(ELIST,a1,e2);
 			e1 = r->mem;
@@ -1269,19 +1256,14 @@ void call.simpl()
 	}
 	}
 
-//error('d',"ex1 %d %d %d",fn,f->f_inline,debug);
 	e2->simpl();
-//error('d',"ex2 %d %d %d",fn,f->f_inline,debug);
 	if (e1->base==NAME && e1->tp->base==FCT) {
 		/* reconstitute fn destroyed to suppress "virtual" */
 		fct_name = fn = (Pname)e1;
 		f = (Pfct)fn->tp;
 	}
-//error('d',"ex3 %d %d %d",fn,f->f_inline,debug);
 	if (fn && f->f_inline && debug==0) {
-//error('d',"expand%n",fn);
 		Pexpr ee = f->expand(fn,scope,e2);
-//error('d',"expanded %d %d",fn,ee);
 		if (ee) *Pexpr(this) = *ee;
 	}
 }
@@ -1297,7 +1279,6 @@ Pstmt stmt.simpl()
 */
 {
 	if (this == 0) error('i',"0->stmt.simpl()");
-/*error('d',"stmt.simpl %d%k e %d%k s %d%k sl %d%k\n",this,base,e,e?e->base:0,s,s?s->base:0,s_list,s_list?s_list->base:0); fflush(stderr);*/
 
 	curr_expr = e;
 
@@ -1602,7 +1583,6 @@ plugh:
 		Pstmt ss = 0;
 		Pname cln;
 		for (Pname tn = memtbl->get_mem(i=1); tn; tn=memtbl->get_mem(++i)) {
-/*fprintf(stderr,"tmp %s tbl %d\n",tn->string,memtbl);*/
 			if ( cln=tn->tp->is_cl_obj() ) {
 				Pclass cl = (Pclass)cln->tp;
 				Pname d = cl->has_dtor();
@@ -1615,7 +1595,6 @@ plugh:
 					dl->fct_name = d;
 					dls->s_list = ss;
 					ss = dls;
-/*error('d',"%d (tbl=%d): %n.%n %d->%d",this,memtbl,tn,d,ss,ss->s_list);*/ 
 				}
 			}
 		}
