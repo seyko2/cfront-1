@@ -10,14 +10,15 @@ O_TASK		=	obj.o qhead.o qtail.o sched.o sim.o \
 OFILES	=	$(O_COMPLEX) $(O_GENERIC) $(O_NEW) \
                        $(O_STATIC) $(O_STREAM) #$(O_TASK)
 CC	=	CC
-CCFLAGS	=
+CCFLAGS	= -I../../incl
 
 libC.a:        $(O_COMPLEX) $(O_GENERIC) $(O_NEW) $(O_STATIC) $(O_STREAM) #Task
 	ar r libC.a $(OFILES)
 	if test "$(BSD)" ; then ranlib libC.a; fi
 
 _stdio.o : _stdio..c
-	gcc -c $< -o $@
+	# gcc -c $< -o $@
+	$(CC) -c $< -o $@
 
 Task:
 	if vax; then \
@@ -29,86 +30,86 @@ Task:
 	else echo "task lib not implemented on this machine"; \
 	fi
 
-abs.o:	../complex/abs.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/abs.c
+abs.o:	../complex/abs.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/abs.C
 
-arg.o:	../complex/arg.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/arg.c
+arg.o:	../complex/arg.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/arg.C
 
-cos.o:	../complex/cos.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/cos.c
+cos.o:	../complex/cos.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/cos.C
 
-error.o:	../complex/error.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/error.c
+error.o:	../complex/error.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/error.C
 
-exp.o:	../complex/exp.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/exp.c
+exp.o:	../complex/exp.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/exp.C
 
-io.o:	../complex/io.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/io.c
+io.o:	../complex/io.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/io.C
 
-log.o:	../complex/log.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/log.c
+log.o:	../complex/log.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/log.C
 
-oper.o:	../complex/oper.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/oper.c
+oper.o:	../complex/oper.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/oper.C
 
-polar.o:	../complex/polar.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/polar.c
+polar.o:	../complex/polar.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/polar.C
 
-pow.o:	../complex/pow.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/pow.c
+pow.o:	../complex/pow.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/pow.C
 
-sin.o:	../complex/sin.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/sin.c
+sin.o:	../complex/sin.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/sin.C
 
-sqrt.o:	../complex/sqrt.c
-	$(CC) $(CCFLAGS) -I../complex -c ../complex/sqrt.c
+sqrt.o:	../complex/sqrt.C
+	$(CC) $(CCFLAGS) -I../complex -c ../complex/sqrt.C
 
 generic.o:	../generic/generic.c
 	$(CC) $(CCFLAGS) -I../generic -c ../generic/generic.c
-_delete.o:	../new/_delete.c
-	$(CC) $(CCFLAGS) -I../new -c ../new/_delete.c
+_delete.o:	../new/_delete.C
+	$(CC) $(CCFLAGS) -I../new -c ../new/_delete.C
 
-_handler.o:	../new/_handler.c
-	$(CC) $(CCFLAGS) -I../new -c ../new/_handler.c
+_handler.o:	../new/_handler.C
+	$(CC) $(CCFLAGS) -I../new -c ../new/_handler.C
 
-_new.o:	../new/_new.c
-	$(CC) $(CCFLAGS) -I../new -c ../new/_new.c
+_new.o:	../new/_new.C
+	$(CC) $(CCFLAGS) -I../new -c ../new/_new.C
 
-_vec.o:	../new/_vec.c
-	$(CC) $(CCFLAGS) -I../new -c ../new/_vec.c
+_vec.o:	../new/_vec.C
+	$(CC) $(CCFLAGS) -I../new -c ../new/_vec.C
 
-_ctor.o:	../static/_ctor.c
-	$(CC) $(CCFLAGS) -I../static -c ../static/_ctor.c
+_ctor.o:	../static/_ctor.C
+	$(CC) $(CCFLAGS) -I../static -c ../static/_ctor.C
 
-_dtor.o:	../static/_dtor.c
-	$(CC) $(CCFLAGS) -I../static -c ../static/_dtor.c
+_dtor.o:	../static/_dtor.C
+	$(CC) $(CCFLAGS) -I../static -c ../static/_dtor.C
 
-_main.o:	../static/_main.c
-	$(CC) $(CCFLAGS) -I../static -c ../static/_main.c
+_main.o:	../static/_main.C
+	$(CC) $(CCFLAGS) -I../static -c ../static/_main.C
 
-dtors.o:	../static/dtors.c
-	$(CC) $(CCFLAGS) -I../static -c ../static/dtors.c
+dtors.o:	../static/dtors.C
+	$(CC) $(CCFLAGS) -I../static -c ../static/dtors.C
 
 exit.o:	../static/exit.c
 	$(CC) $(CCFLAGS) -I../static -c ../static/exit.c
 
-munch.o:	../static/munch.c
-	$(CC) $(CCFLAGS) -I../static -c ../static/munch.c
+munch.o:	../static/munch.C
+	$(CC) $(CCFLAGS) -I../static -c ../static/munch.C
 
-circbuf.o:	../stream/circbuf.c
-	$(CC) $(CCFLAGS) -I../stream -c ../stream/circbuf.c
+circbuf.o:	../stream/circbuf.C
+	$(CC) $(CCFLAGS) -I../stream -c ../stream/circbuf.C
 
-filebuf.o:	../stream/filebuf.c
-	$(CC) $(CCFLAGS) -I../stream -c ../stream/filebuf.c
+filebuf.o:	../stream/filebuf.C
+	$(CC) $(CCFLAGS) -I../stream -c ../stream/filebuf.C
 
-in.o:	../stream/in.c
-	$(CC) $(CCFLAGS) -I../stream -c ../stream/in.c
+in.o:	../stream/in.C
+	$(CC) $(CCFLAGS) -I../stream -c ../stream/in.C
 
-out.o:	../stream/out.c
-	$(CC) $(CCFLAGS) -I../stream -c ../stream/out.c
+out.o:	../stream/out.C
+	$(CC) $(CCFLAGS) -I../stream -c ../stream/out.C
 
-streambuf.o:	../stream/streambuf.c
-	$(CC) $(CCFLAGS) -I../stream -c ../stream/streambuf.c
+streambuf.o:	../stream/streambuf.C
+	$(CC) $(CCFLAGS) -I../stream -c ../stream/streambuf.C
 

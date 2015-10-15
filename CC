@@ -3,16 +3,18 @@
 
 # -----------------------------------------
 
-	CF=~/projects/cfront-1b
+	# CF=~/projects/cfront-1b
+	CF=$(dirname $0)
 	
 	cfrontC=$CF/cfront
-	LIBRARY=$CF/libC.a
+	munch=$CF/munch
+
 	I=$CF/incl
 	Y="-Du3b"
+	LIBRARY=$CF/libC.a
 	
 	ccC="gcc -w"
 	cppC="cpp"
-	munch=$CF/munch
 
 # -----------------------------------------
 
@@ -74,9 +76,9 @@ for A do
 		;;
 	-.*)	SUF=`expr "$A" : '-\(.*\)'`
 		;;
-	*.c)	if	test -f $A
+	*.C)	if	test -f $A
 		then
-			B=`basename $A .c`
+			B=`basename $A .C`
 			if	test $PON
 			then
 				if test $SUF
@@ -98,10 +100,10 @@ for A do
 				if test $SUF
 				then
 					echo "$cfrontC $O  $A > $B$SUF:" 1>&2
-					$cppC -C $Y -I$I  $A | $cfrontC +L +f$A $O > $B$SUF
+					$cppC    $Y -I$I  $A | $cfrontC +L +f$A $O > $B$SUF
 					E=$?
 				else	
-					$cppC -C $Y -I$I  $A | $cfrontC +L +f$A $O
+					$cppC    $Y -I$I  $A | $cfrontC +L +f$A $O
 					E=$?
 					case $E in
 					0)	;;
@@ -111,7 +113,7 @@ for A do
 				fi
 			else
 				echo "CC $O $A:" 1>&2
-				$cppC -C $Y -I$I  $A | $cfrontC +L +f$A $O > $B$ISUF
+				$cppC    $Y -I$I  $A | $cfrontC +L +f$A $O > $B$ISUF
 				E=$?
 				R=1
 				C="$C $B$ISUF"
@@ -162,21 +164,26 @@ case $G in
 	fi
 	if test $CF					# -c: skip link edit
 	then
-		echo "$ccC $P -c $X $LIBRARY" 1>&2
-		$ccC $P -c $X $LIBRARY
+		echo "$ccC $P -c $X"  1>&2
+		$ccC $P -c $X
 		EE=$?
 		for A in $MVLIST
 		do
-			mv $A..o $A.o
+			[ -f $A..o ] && mv $A..o $A.o
 		done
 	else
 		echo "$ccC $P $X $LIBRARY" 1>&2
-		$ccC $P -c $X >__err			# compile, no load
-		EE=$?
-		for A in $MVLIST
-		do
-			mv $A..o $A.o
-		done
+		X=$(echo $X | sed -e 's/-o[ \t]*[^ \t]*//')
+		A=$(echo $X | grep '[^ \t]*\.c')
+		EE=0
+		[ -n "$A" ] && {
+		    $ccC $P -c $X >__err			# compile, no load
+		    EE=$?
+		    for A in $MVLIST
+		    do
+			[ -f $A..o ] &&  mv $A..o $A.o
+		    done
+		}
 		case $EE in
 		0)	#echo "ld $Z $LIBRARY -lc"
 			$ccC $P $Z $LIBRARY > __err		# load
@@ -199,6 +206,10 @@ case $G in
 			fi
 			;;
 		esac
+		for A in $MVLIST
+		do
+		    [ -f $A.o ] && rm $A.o
+		done
 		rm __err
 	fi
 esac

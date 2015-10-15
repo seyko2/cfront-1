@@ -13,68 +13,71 @@ cfront:	$(OFILES)
 
 cfront.h:	token.h typedef.h
 
-y.tab.c:	gram.y
-	yacc gram.y
+y.tab.C yystype.h: gram.y
+	yacc -d gram.y
+	mv y.tab.c y.tab.C
+	mv y.tab.h yystype.h
+	sed -i -e 's/^#ifdef __cplusplus/#if 0/' y.tab.C
 
-alloc.o:	alloc.c cfront.h
-	$(CC) $(CCFLAGS) -c alloc.c 
+alloc.o:	alloc.C cfront.h
+	$(CC) $(CCFLAGS) -c alloc.C 
 
-dcl.o:	dcl.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c dcl.c 
+dcl.o:	dcl.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c dcl.C 
 
-dcl2.o:	dcl2.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c dcl2.c 
+dcl2.o:	dcl2.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c dcl2.C 
 
-del.o:	del.c cfront.h
-	$(CC) $(CCFLAGS) -c del.c 
+del.o:	del.C cfront.h
+	$(CC) $(CCFLAGS) -c del.C 
 
-error.o:	error.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c error.c 
+error.o:	error.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c error.C 
 
-expand.o:	expand.c cfront.h
-	$(CC) $(CCFLAGS) -c expand.c 
+expand.o:	expand.C cfront.h
+	$(CC) $(CCFLAGS) -c expand.C 
 
-expr.o:	expr.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c expr.c 
+expr.o:	expr.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c expr.C 
 
-expr2.o:	expr2.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c expr2.c 
+expr2.o:	expr2.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c expr2.C 
 
-lalex.o:	lalex.c cfront.h tqueue.h yystype.h
-	$(CC) $(CCFLAGS) -c lalex.c 
+lalex.o:	lalex.C cfront.h tqueue.h yystype.h
+	$(CC) $(CCFLAGS) -c lalex.C 
 
-lex.o:	lex.c cfront.h size.h tqueue.h yystype.h
-	$(CC) $(CCFLAGS) -c lex.c 
+lex.o:	lex.C cfront.h size.h tqueue.h yystype.h
+	$(CC) $(CCFLAGS) -c lex.C 
 
-main.o:	main.c cfront.h
-	$(CC) $(PATCH) $(CCFLAGS) -c main.c 
+main.o:	main.C cfront.h
+	$(CC) $(PATCH) $(CCFLAGS) -c main.C 
 
-norm.o:	norm.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c norm.c 
+norm.o:	norm.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c norm.C 
 
-norm2.o:	norm2.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c norm2.c 
+norm2.o:	norm2.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c norm2.C 
 
-print.o:	print.c cfront.h
-	$(CC) $(CCFLAGS) -c print.c 
+print.o:	print.C cfront.h
+	$(CC) $(CCFLAGS) -c print.C 
 
-repr.o:	repr.c cfront.h
-	$(CC) $(CCFLAGS) -c repr.c 
+repr.o:	repr.C cfront.h
+	$(CC) $(CCFLAGS) -c repr.C 
 
-simpl.o:	simpl.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c simpl.c 
+simpl.o:	simpl.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c simpl.C 
 
-size.o:	size.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c size.c 
+size.o:	size.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c size.C 
 
-table.o:	table.c cfront.h
-	$(CC) $(CCFLAGS) -c table.c 
+table.o:	table.C cfront.h
+	$(CC) $(CCFLAGS) -c table.C 
 
-typ.o:	typ.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c typ.c 
+typ.o:	typ.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c typ.C 
 
-typ2.o:	typ2.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c typ2.c 
+typ2.o:	typ2.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c typ2.C 
 
-y.tab.o:	y.tab.c cfront.h size.h
-	$(CC) $(CCFLAGS) -c y.tab.c 
+y.tab.o:	y.tab.C cfront.h size.h
+	$(CC) $(CCFLAGS) -c y.tab.C 
