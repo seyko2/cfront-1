@@ -1,0 +1,49 @@
+ident	"@(#)cfront:README	1.4"
+This is the AT&T C++ Translator, Release 1.0.
+
+Some extra hints about porting the translator:
+
+1. Check the headers in incl/ to make sure they match your Unix.
+   Also, change src/size.h to match your c compiler.
+
+2. If you change stdio.h or ctype.h, you'll also have to make the
+changes to the files in the scratch directory.
+(See the file scratch/bsd.sed for a suggested sed script for BSD 4.2 users.)
+
+3. If your architecture has a different understanding of structure sizes than
+Unix system V, you will have to find the structure sizes that are passed to
+_new() in the files in the scratch directory, and change them.
+
+4. If you want to try to build the translator without putting things in
+    /usr/include or /usr/lib:
+    The environment variable LIBRARY can be set and exported to specify
+    a new name for the standard C++ library:
+
+    LIBRARY=/usr/johnsmith/lib/libC.a; export LIBRARY
+
+    Note that, unlike setting LIB_ID, this means that the library need not be in
+    /lib or /usr/lib.
+
+    The environment variable I can be set and exported to specify 
+    the directory that contains the header files (default /usr/include/CC):
+
+    I=/usr/johnsmith/include; export I
+
+5. BSD Users will want to follow the following checklist:
+5.1. Change incl/stdio.h to add the _bufsiz element to the _iob structure.
+5.2. Don't use the ctype.h in the incl/ directory.
+     Use the regular c ctype.h (in /usr/include) instead.  This is because
+     BSD uses _ctype_ instead of _ctype for the array name.
+5.3. Run bsd.sed in the scratch directory.  This will update the file structures
+     and _ctype array in the scratch files.
+5.4. In the main makefile, set
+
+	CCFLAGS="-DBSD"
+	BSD=1
+
+    This will pass "-DBSD" to the build of the compiler, and make sure that
+    ranlib is run on the standard C++ library.
+5.5 Now, you can follow the regular bootstrapping procedure.
+
+* Unix is a trademark of AT&T Bell Laboratories.
+
