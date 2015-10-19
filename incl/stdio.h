@@ -59,8 +59,8 @@ extern char* fgets(char*, int, FILE*);
 #define	L_tmpnam (sizeof(P_tmpdir) + 15)
 
 extern char* gets(char*);
-extern puts(const char*);
-extern fputs(const char*, FILE*);
+extern int puts(const char *s);
+extern int fputs(const char *s, FILE *stream);
 extern int printf(const char* ...);
 extern int fprintf(FILE*, const char* ...);
 extern int sprintf(char*, const char* ...);
@@ -70,8 +70,8 @@ extern int sscanf(char*, const char* ...);
 extern int fread(char*, int, int, FILE*);
 extern int fwrite(const char*, int, int, FILE*);
 extern int fclose(FILE*);
-extern fflush(FILE*);
-extern clearerr(FILE*);
+extern int fflush(FILE *stream);
+extern void clearerr (FILE *__stream);
 extern int fseek(FILE*, long, int);
 extern void rewind(FILE*);
 extern int getw(FILE*);
@@ -80,7 +80,7 @@ extern FILE* popen(const char*, const char*);
 extern int pclose(FILE*);
 extern int putw(int, FILE*);
 extern int fputc(int, FILE*);
-extern setbuf(FILE*, char*);
+extern void setbuf(FILE *stream, char *buf);
 extern int ungetc(int, FILE*);
 
 extern void exit(int);

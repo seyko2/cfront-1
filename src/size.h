@@ -82,65 +82,11 @@ extern int F_SENSITIVE;	// is field alignment sensitive to the type of the field
 extern int F_OPTIMIZED;	// can the compiler fit a small int field into a char?
 
 				// default sizes:
-#if defined(u3b) || defined(u3b2) || defined(u3b5)
-#define DBI_IN_WORD 32
-#define DBI_IN_BYTE 8
-#define DSZ_CHAR 1
-#define DAL_CHAR 1
-#define DSZ_SHORT 2
-#define DAL_SHORT 2
-#define DSZ_INT 4
-#define DAL_INT 4
-#define DSZ_LONG 4
-#define DAL_LONG 4
-#define DSZ_FLOAT 4
-#define DAL_FLOAT 4
-#define DSZ_DOUBLE 8
-#define DAL_DOUBLE 4
-#define DSZ_STRUCT 4
-#define DAL_STRUCT 4
+#include "./szal.result"
 #define DSZ_FRAME 4
 #define DAL_FRAME 4
-#define DSZ_WORD 4
-#define DSZ_WPTR 4
-#define DAL_WPTR 4
-#define DSZ_BPTR 4
-#define DAL_BPTR 4
 #define DSZ_TOP 0
 #define DSZ_BOTTOM 0
-#define DLARGEST_INT "2147483647"	/* 2**31 - 1 */
-#define DF_SENSITIVE 0
-#define DF_OPTIMIZED 1
-#else					// defaults for a VAX (running V8)
-#define DBI_IN_WORD 32
-#define DBI_IN_BYTE 8
-#define DSZ_CHAR 1
-#define DAL_CHAR 1
-#define DSZ_SHORT 2
-#define DAL_SHORT 2
-#define DSZ_INT 4
-#define DAL_INT 4
-#define DSZ_LONG 4
-#define DAL_LONG 4
-#define DSZ_FLOAT 4
-#define DAL_FLOAT 4
-#define DSZ_DOUBLE 8
-#define DAL_DOUBLE 4
-#define DSZ_STRUCT 1
-#define DAL_STRUCT 1
-#define DSZ_FRAME 4
-#define DAL_FRAME 4
-#define DSZ_WORD 4
-#define DSZ_WPTR 4
-#define DAL_WPTR 4
-#define DSZ_BPTR 4
-#define DAL_BPTR 4
-#define DSZ_TOP 0
-#define DSZ_BOTTOM 0
-#define DLARGEST_INT "2147483647"	/* 2**31 - 1 */
-#define DF_SENSITIVE 1
-#define DF_OPTIMIZED 1
-#endif
 
 			/* 	table sizes */
 #define KTBLSIZE	123

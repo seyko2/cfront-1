@@ -28,7 +28,7 @@ munch:	lib/static/munch.C
 	$(CC) $(CCFLAGS) -o munch lib/static/munch.C
 
 cfront: always
-	cd src; $(MAKE) CC=$(CC) CCFLAGS="$(CCFLAGS)"
+	cd src; $(MAKE) XCC=$(CC) CCFLAGS="$(CCFLAGS)"
 	mv src/cfront cfront
 	
 scratch: always

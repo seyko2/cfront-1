@@ -1,83 +1,98 @@
 #ident	"@(#)cfront:src/makefile	1.6"
-CC	=	CC
-#set $(PATCH) to -DPATCH if using the patch version:
-#PATCH=-DPATCH
+
+XCC	?=	g++
+CCFLAGS	=	-O -I../incl
+
+# set $(PATCH) to -DPATCH if using the patch version:
 # set $(PATCH) to nothing if using nm/munch:
-PATCH=
-CCFLAGS=-O
+PATCH	=
+
 OFILES	=	alloc.o dcl.o dcl2.o del.o error.o expand.o expr.o expr2.o \
 		lalex.o lex.o main.o norm.o norm2.o print.o repr.o \
 		simpl.o size.o table.o typ.o typ2.o y.tab.o
+
+COMDEP0	= 	szal.result Makefile \
+		cfront.h size.h token.h tqueue.h typedef.h
+
+COMDEP	=	$(COMDEP0) yystype.h
+
 cfront:	$(OFILES)
-	$(CC)	-o cfront $(OFILES)
+	$(XCC)	-o cfront $(OFILES)
 
-cfront.h:	token.h typedef.h
-
-y.tab.C yystype.h: gram.y
+y.tab.C yystype.h: gram.y $(COMDEP0)
 	yacc -d gram.y
 	mv y.tab.c y.tab.C
 	mv y.tab.h yystype.h
 	sed -i -e 's/^#ifdef __cplusplus/#if 0/' y.tab.C
 
-alloc.o:	alloc.C cfront.h
-	$(CC) $(CCFLAGS) -c alloc.C 
+szal.result: szal/szal.c
+	gcc -o szal/szal szal/szal.c
+	./szal/szal > szal.result
 
-dcl.o:	dcl.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c dcl.C 
+alloc.o: alloc.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c alloc.C 
 
-dcl2.o:	dcl2.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c dcl2.C 
+dcl.o:	dcl.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c dcl.C 
 
-del.o:	del.C cfront.h
-	$(CC) $(CCFLAGS) -c del.C 
+dcl2.o:	dcl2.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c dcl2.C 
 
-error.o:	error.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c error.C 
+del.o:	del.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c del.C 
 
-expand.o:	expand.C cfront.h
-	$(CC) $(CCFLAGS) -c expand.C 
+error.o: error.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c error.C 
 
-expr.o:	expr.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c expr.C 
+expand.o: expand.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c expand.C 
 
-expr2.o:	expr2.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c expr2.C 
+expr.o:	expr.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c expr.C 
 
-lalex.o:	lalex.C cfront.h tqueue.h yystype.h
-	$(CC) $(CCFLAGS) -c lalex.C 
+expr2.o: expr2.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c expr2.C 
 
-lex.o:	lex.C cfront.h size.h tqueue.h yystype.h
-	$(CC) $(CCFLAGS) -c lex.C 
+lalex.o: lalex.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c lalex.C 
 
-main.o:	main.C cfront.h
-	$(CC) $(PATCH) $(CCFLAGS) -c main.C 
+lex.o:	lex.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c lex.C 
 
-norm.o:	norm.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c norm.C 
+main.o:	main.C $(COMDEP)
+	$(XCC) $(PATCH) $(CCFLAGS) -c main.C 
 
-norm2.o:	norm2.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c norm2.C 
+norm.o:	norm.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c norm.C 
 
-print.o:	print.C cfront.h
-	$(CC) $(CCFLAGS) -c print.C 
+norm2.o: norm2.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c norm2.C 
 
-repr.o:	repr.C cfront.h
-	$(CC) $(CCFLAGS) -c repr.C 
+print.o: print.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c print.C 
 
-simpl.o:	simpl.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c simpl.C 
+repr.o:	repr.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c repr.C 
 
-size.o:	size.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c size.C 
+simpl.o: simpl.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c simpl.C 
 
-table.o:	table.C cfront.h
-	$(CC) $(CCFLAGS) -c table.C 
+size.o:	size.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c size.C 
 
-typ.o:	typ.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c typ.C 
+table.o: table.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c table.C 
 
-typ2.o:	typ2.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c typ2.C 
+typ.o:	typ.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c typ.C 
 
-y.tab.o:	y.tab.C cfront.h size.h
-	$(CC) $(CCFLAGS) -c y.tab.C 
+typ2.o:	typ2.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c typ2.C 
+
+y.tab.o: y.tab.C $(COMDEP)
+	$(XCC) $(CCFLAGS) -c y.tab.C 
+
+clean:
+	-@rm szal.result szal/szal
+	-@rm y.tab.C yystype.h
+	-@rm *.o cfront
